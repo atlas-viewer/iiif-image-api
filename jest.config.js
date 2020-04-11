@@ -10,8 +10,15 @@ module.exports = {
         '.json',
     ],
     modulePathIgnorePatterns: ['dist/', 'lib/'],
-    setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
     moduleNameMapper: {
         '\\.(css|scss)$': '<rootDir>/__mocks__/styleMock.ts',
     },
+  globals: {
+    'ts-jest': {
+      // ts-jest configuration goes here
+      tsConfig: {
+        rootDir: '.'
+      }
+    }
+  }
 };
