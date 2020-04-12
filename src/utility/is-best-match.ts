@@ -5,13 +5,14 @@ export function isBestMatch(
   current: FixedSizeImage | null,
   candidate: FixedSizeImage
 ) {
+  const width = !request.width ? request.maxWidth : request.width;
+
   return (
     candidate.height <= request.maxHeight &&
     candidate.width <= request.maxWidth &&
     candidate.height >= request.minHeight &&
     candidate.width >= request.minWidth &&
     (!current ||
-      Math.abs(candidate.width - request.width) <
-        Math.abs(current.width - request.width))
+      Math.abs(candidate.width - width) < Math.abs(current.width - width))
   );
 }

@@ -105,6 +105,7 @@ export function pickBestFromCandidates(
       }
       if (candidate.type === 'fixed-service') {
         if (request.unsafeImageService) {
+          // @todo fit within on request height/width based on candidate.
           explain(
             () =>
               `Checking for an image from the tile source, without calculating the right height and width (unsafeImageService)`
@@ -116,20 +117,13 @@ export function pickBestFromCandidates(
           );
           swapChoice(choice, currentChoice);
         } else {
-          explain(() => `Checking for an image from the tile source`);
-          const ratio = request.width / request.height;
-          const portrait = request.width > request.height;
-          const bestTileHeight = portrait
-            ? candidate.width
-            : Math.round(candidate.width * ratio);
-          const bestTileWidth = portrait
-            ? Math.round(candidate.width * ratio)
-            : candidate.width;
+          explain(() => `Checking for an image from the tile source 3`);
           const choice = getImageFromTileSource(
             candidate,
-            bestTileWidth,
-            bestTileHeight
+            candidate.width,
+            candidate.height
           );
+
           swapChoice(choice, currentChoice);
         }
       }
