@@ -34,8 +34,8 @@ export type ImageCandidate =
   | FixedSizeImageService;
 
 export type ImageCandidateRequest = {
-  width: number;
-  height: number;
+  width?: number;
+  height?: number;
   maxWidth?: number;
   maxHeight?: number;
   minWidth?: number;

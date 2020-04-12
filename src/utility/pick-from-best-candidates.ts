@@ -35,6 +35,8 @@ export function pickBestFromCandidates(
       returnAllOptions: false,
       preferFixedSize: false,
       explain: false,
+      height: 0,
+      width: 0,
     },
     inputRequest
   );
