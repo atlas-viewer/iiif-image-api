@@ -40,7 +40,7 @@
     "declarationMap": true
   },
   "include": [
-    "src"
+    "src/**/*"
   ],
   "exclude": [
     "src/nunjucks",

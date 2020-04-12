@@ -1,0 +1,83 @@
+import {
+  ContentResource,
+  IIIFExternalWebResource,
+} from '@hyperion-framework/types';
+import {
+  imageServiceLoader,
+  ImageServiceLoader,
+  ImageServiceRequest,
+} from '../image-service-loader';
+import { ImageCandidate } from '../types';
+import { getFixedSizeFromImage } from './get-fixed-size-from-image';
+import { getImageCandidatesFromService } from './get-image-candidates-from-service';
+import { getImageServices } from './get-image-services';
+
+/**
+ * Get image candidates
+ *
+ * Given an unknown resource, and optionally an image service loader, it will
+ * try to get all of the possible options for images at a specific size.
+ *
+ * Note: if you are wanting to depend on external web resources, then you have
+ * to either preload these, or prepare the image loader for predicting them.
+ *
+ * @param unknownResource
+ * @param dereference
+ * @param loader
+ */
+export function getImageCandidates(
+  unknownResource: ContentResource,
+  dereference: boolean = true,
+  loader: ImageServiceLoader = imageServiceLoader
+): ImageCandidate[] {
+  const candidates: ImageCandidate[] = [];
+  const fixedSizeFromImage = getFixedSizeFromImage(unknownResource);
+  if (fixedSizeFromImage === null) {
+    return candidates;
+  }
+  // Cast to IIIF resource, assuming we are working in that context.
+  const resource = unknownResource as IIIFExternalWebResource;
+
+  // - x.1 fixed size
+  // - x.4 ID of thumbnail (without width/height)
+  candidates.push(fixedSizeFromImage);
+
+  // We will try to dereference if available (cache or prediction).
+  if (dereference && resource.width && resource.height) {
+    const refCandidates = [];
+    const imageServices = getImageServices(resource);
+    for (const service of imageServices) {
+      const request: ImageServiceRequest = {
+        id: service.id,
+        width: resource.width,
+        height: resource.height,
+      };
+      if (loader.canLoadSync(request)) {
+        const externalService = loader.loadServiceSync(request);
+        if (externalService) {
+          if (!externalService.height) {
+            externalService.height = resource.height;
+          }
+          if (!externalService.width) {
+            externalService.width = resource.width;
+          }
+          refCandidates.push(
+            ...getImageCandidatesFromService([externalService])
+          );
+        }
+      }
+    }
+
+    if (refCandidates.length) {
+      candidates.push(...refCandidates);
+      return candidates;
+    }
+  }
+
+  // Embedded service.
+  if (resource.service) {
+    candidates.push(...getImageCandidatesFromService(resource.service));
+  }
+
+  return candidates;
+}

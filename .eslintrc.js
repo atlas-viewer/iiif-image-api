@@ -1,9 +1,8 @@
 module.exports = {
     parser: '@typescript-eslint/parser',
-    plugins: ['@typescript-eslint', 'react-hooks'],
+    plugins: ['@typescript-eslint'],
     extends: ['@fesk/standard'],
     rules: {
-        'react-hooks/rules-of-hooks': 'error',
-        'react-hooks/exhaustive-deps': 'warn',
-    },
+      'flowtype/no-types-missing-file-annotation': 0,
+    }
 };

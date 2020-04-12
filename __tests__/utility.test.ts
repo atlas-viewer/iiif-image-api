@@ -1,3 +1,5 @@
+import { ImageServiceLoader } from '../src/image-service-loader';
+import { ImageCandidate } from '../src/types';
 import {
   canonicalServiceUrl,
   fixedSizesFromScales,
@@ -12,9 +14,7 @@ import {
   pickBestFromCandidates,
   sizesMatch,
   supportsCustomSizes,
-} from '../src/utility';
-import { ImageServiceLoader } from '../src/image-service-loader';
-import { ImageCandidate } from '../src/types';
+} from '../src';
 
 describe('image utilities', () => {
   describe('sizesMatch', () => {
@@ -24,18 +24,30 @@ describe('image utilities', () => {
     });
 
     test('lengths dont match - same values, in same order', () => {
-      expect(sizesMatch([{ height: 100, width: 120 }], [{ height: 100, width: 120 }])).toEqual(true);
+      expect(
+        sizesMatch([{ height: 100, width: 120 }], [{ height: 100, width: 120 }])
+      ).toEqual(true);
     });
 
     test('lengths match, sizes different', () => {
-      expect(sizesMatch([{ height: 100, width: 100 }], [{ width: 200, height: 200 }])).toEqual(false);
+      expect(
+        sizesMatch([{ height: 100, width: 100 }], [{ width: 200, height: 200 }])
+      ).toEqual(false);
     });
 
     test('same sizes, out of order', () => {
       expect(
         sizesMatch(
-          [{ height: 100, width: 150 }, { height: 200, width: 300 }, { height: 300, width: 450 }],
-          [{ height: 300, width: 450 }, { height: 200, width: 300 }, { height: 100, width: 150 }]
+          [
+            { height: 100, width: 150 },
+            { height: 200, width: 300 },
+            { height: 300, width: 450 },
+          ],
+          [
+            { height: 300, width: 450 },
+            { height: 200, width: 300 },
+            { height: 100, width: 150 },
+          ]
         )
       ).toEqual(true);
     });
@@ -43,8 +55,16 @@ describe('image utilities', () => {
     test('out of order, but some different', () => {
       expect(
         sizesMatch(
-          [{ height: 100, width: 150 }, { height: 200, width: 300 }, { height: 300, width: 500 }],
-          [{ height: 300, width: 450 }, { height: 200, width: 300 }, { height: 100, width: 150 }]
+          [
+            { height: 100, width: 150 },
+            { height: 200, width: 300 },
+            { height: 300, width: 500 },
+          ],
+          [
+            { height: 300, width: 450 },
+            { height: 200, width: 300 },
+            { height: 100, width: 150 },
+          ]
         )
       ).toEqual(false);
     });
@@ -69,11 +89,18 @@ describe('image utilities', () => {
     });
 
     test('not an iamge', () => {
-      expect(getFixedSizeFromImage({ id: 'http://example.org/audio.mp3', type: 'Sound' })).toEqual(null);
+      expect(
+        getFixedSizeFromImage({
+          id: 'http://example.org/audio.mp3',
+          type: 'Sound',
+        })
+      ).toEqual(null);
     });
 
     test('no id provided, invalid image but valid content resource.. technically', () => {
-      expect(getFixedSizeFromImage({ type: 'Image', value: 'some textual value' })).toEqual(null);
+      expect(
+        getFixedSizeFromImage({ type: 'Image', value: 'some textual value' })
+      ).toEqual(null);
     });
 
     test('almost an image, but no dimensions', () => {
@@ -112,7 +139,12 @@ describe('image utilities', () => {
 
     test('image with enough information to be an image', () => {
       expect(
-        getFixedSizeFromImage({ id: 'http://example.org/image.jpg', type: 'Image', width: 1000, height: 2000 })
+        getFixedSizeFromImage({
+          id: 'http://example.org/image.jpg',
+          type: 'Image',
+          width: 1000,
+          height: 2000,
+        })
       ).toEqual({
         id: 'http://example.org/image.jpg',
         type: 'fixed',
@@ -139,7 +171,14 @@ describe('image utilities', () => {
           profile: 'level2',
           sizes: [{ width: 1024, height: 2048 }],
         })
-      ).toEqual([{ height: 2048, id: 'http://example.org/service1.json', type: 'fixed-service', width: 1024 }]);
+      ).toEqual([
+        {
+          height: 2048,
+          id: 'http://example.org/service1.json',
+          type: 'fixed-service',
+          width: 1024,
+        },
+      ]);
     });
 
     test('simple service with multiple sizes', () => {
@@ -147,28 +186,45 @@ describe('image utilities', () => {
         getFixedSizesFromService({
           id: 'http://example.org/service1.json',
           profile: 'level2',
-          sizes: [{ width: 1024, height: 2048 }, { width: 512, height: 1024 }],
+          sizes: [
+            { width: 1024, height: 2048 },
+            { width: 512, height: 1024 },
+          ],
         })
       ).toEqual([
-        { height: 2048, id: 'http://example.org/service1.json', type: 'fixed-service', width: 1024 },
-        { height: 1024, id: 'http://example.org/service1.json', type: 'fixed-service', width: 512 },
+        {
+          height: 2048,
+          id: 'http://example.org/service1.json',
+          type: 'fixed-service',
+          width: 1024,
+        },
+        {
+          height: 1024,
+          id: 'http://example.org/service1.json',
+          type: 'fixed-service',
+          width: 512,
+        },
       ]);
     });
   });
 
   describe('canonicalServiceUrl', () => {
     test('already canonical', () => {
-      expect(canonicalServiceUrl('http://example.org/image-1/info.json')).toEqual(
+      expect(
+        canonicalServiceUrl('http://example.org/image-1/info.json')
+      ).toEqual('http://example.org/image-1/info.json');
+    });
+
+    test('trailing slash', () => {
+      expect(canonicalServiceUrl('http://example.org/image-1/')).toEqual(
         'http://example.org/image-1/info.json'
       );
     });
 
-    test('trailing slash', () => {
-      expect(canonicalServiceUrl('http://example.org/image-1/')).toEqual('http://example.org/image-1/info.json');
-    });
-
     test('no trailing slash', () => {
-      expect(canonicalServiceUrl('http://example.org/image-1')).toEqual('http://example.org/image-1/info.json');
+      expect(canonicalServiceUrl('http://example.org/image-1')).toEqual(
+        'http://example.org/image-1/info.json'
+      );
     });
 
     describe('getImageServerFromId', () => {
@@ -177,11 +233,17 @@ describe('image utilities', () => {
       });
 
       test('server with protocol, which gets stripped off', () => {
-        expect(getImageServerFromId('https://example.org')).toEqual('example.org');
+        expect(getImageServerFromId('https://example.org')).toEqual(
+          'example.org'
+        );
       });
 
       test('server wit path', () => {
-        expect(getImageServerFromId('https://example.org/some-image/something/here.json')).toEqual('example.org');
+        expect(
+          getImageServerFromId(
+            'https://example.org/some-image/something/here.json'
+          )
+        ).toEqual('example.org');
       });
     });
   });
@@ -239,7 +301,10 @@ describe('image utilities', () => {
       expect(
         supportsCustomSizes({
           id: 'http://example.org/service/1',
-          profile: ['level0', { supports: ['regionByPx', 'sizeByWh', 'sizeByW'] }],
+          profile: [
+            'level0',
+            { supports: ['regionByPx', 'sizeByWh', 'sizeByW'] },
+          ],
         })
       ).toEqual(true);
     });
@@ -306,7 +371,10 @@ describe('image utilities', () => {
         getCustomSizeFromService({
           id: 'http://example.org/service/1',
           profile: 'level0',
-          sizes: [{ width: 100, height: 200 }, { width: 200, height: 400 }],
+          sizes: [
+            { width: 100, height: 200 },
+            { width: 200, height: 400 },
+          ],
         })
       ).toEqual([]);
     });
@@ -511,7 +579,12 @@ describe('image utilities', () => {
           width: 2048,
           tiles: [{ width: 256, scaleFactors: [1, 2, 3, 4, 8] }],
         })
-      ).toEqual({ height: 128, id: 'http://example.org/service/1', type: 'fixed-service', width: 256 });
+      ).toEqual({
+        height: 128,
+        id: 'http://example.org/service/1',
+        type: 'fixed-service',
+        width: 256,
+      });
     });
 
     test('invalid tiles', () => {
@@ -533,9 +606,17 @@ describe('image utilities', () => {
           profile: 'level1',
           height: 1024,
           width: 2048,
-          tiles: [{ width: 256, scaleFactors: [1, 2] }, { width: 512, scaleFactors: [4, 8] }],
+          tiles: [
+            { width: 256, scaleFactors: [1, 2] },
+            { width: 512, scaleFactors: [4, 8] },
+          ],
         })
-      ).toEqual({ height: 256, id: 'http://example.org/service/1', type: 'fixed-service', width: 512 });
+      ).toEqual({
+        height: 256,
+        id: 'http://example.org/service/1',
+        type: 'fixed-service',
+        width: 512,
+      });
     });
   });
 
@@ -562,16 +643,25 @@ describe('image utilities', () => {
           },
           false
         )
-      ).toEqual([{ height: 200, id: 'http://example.org/image.jpg', type: 'fixed', width: 100 }]);
+      ).toEqual([
+        {
+          height: 200,
+          id: 'http://example.org/image.jpg',
+          type: 'fixed',
+          width: 100,
+        },
+      ]);
     });
 
     test('just a url', () => {
-      expect(getImageCandidates('http://example.org/image.jpg', false)).toEqual([
-        {
-          id: 'http://example.org/image.jpg',
-          type: 'unknown',
-        },
-      ]);
+      expect(getImageCandidates('http://example.org/image.jpg', false)).toEqual(
+        [
+          {
+            id: 'http://example.org/image.jpg',
+            type: 'unknown',
+          },
+        ]
+      );
     });
 
     test('image with embedded service (level 0)', () => {
@@ -592,7 +682,14 @@ describe('image utilities', () => {
           },
           false
         )
-      ).toEqual([{ height: 800, id: 'http://example.org/image.jpg', type: 'fixed', width: 1200 }]);
+      ).toEqual([
+        {
+          height: 800,
+          id: 'http://example.org/image.jpg',
+          type: 'fixed',
+          width: 1200,
+        },
+      ]);
     });
 
     test('image with embedded service (level 0 + sizes)', () => {
@@ -608,16 +705,34 @@ describe('image utilities', () => {
                 id: 'http://example.org/image/service',
                 profile: 'level0',
                 protocol: 'ttp://iiif.io/api/image',
-                sizes: [{ width: 600, height: 400 }, { width: 300, height: 200 }],
+                sizes: [
+                  { width: 600, height: 400 },
+                  { width: 300, height: 200 },
+                ],
               },
             ],
           },
           false
         )
       ).toEqual([
-        { height: 800, id: 'http://example.org/image.jpg', type: 'fixed', width: 1200 },
-        { height: 400, id: 'http://example.org/image/service', type: 'fixed-service', width: 600 },
-        { height: 200, id: 'http://example.org/image/service', type: 'fixed-service', width: 300 },
+        {
+          height: 800,
+          id: 'http://example.org/image.jpg',
+          type: 'fixed',
+          width: 1200,
+        },
+        {
+          height: 400,
+          id: 'http://example.org/image/service',
+          type: 'fixed-service',
+          width: 600,
+        },
+        {
+          height: 200,
+          id: 'http://example.org/image/service',
+          type: 'fixed-service',
+          width: 300,
+        },
       ]);
     });
 
@@ -641,7 +756,12 @@ describe('image utilities', () => {
           false
         )
       ).toEqual([
-        { height: 800, id: 'http://example.org/image.jpg', type: 'fixed', width: 1200 },
+        {
+          height: 800,
+          id: 'http://example.org/image.jpg',
+          type: 'fixed',
+          width: 1200,
+        },
         {
           id: 'http://example.org/image/service',
           maxHeight: 256,
@@ -673,7 +793,12 @@ describe('image utilities', () => {
           false
         )
       ).toEqual([
-        { height: 800, id: 'http://example.org/image.jpg', type: 'fixed', width: 1200 },
+        {
+          height: 800,
+          id: 'http://example.org/image.jpg',
+          type: 'fixed',
+          width: 1200,
+        },
         {
           id: 'http://example.org/image/service',
           maxHeight: 256,
@@ -686,19 +811,26 @@ describe('image utilities', () => {
     });
 
     test('non image example', () => {
-      expect(getImageCandidates({ id: 'http://example.org/audio.mp3', type: 'Sound' })).toEqual([]);
+      expect(
+        getImageCandidates({
+          id: 'http://example.org/audio.mp3',
+          type: 'Sound',
+        })
+      ).toEqual([]);
     });
 
     test('example thumbnail service', () => {
       expect(
         getImageCandidates(
           {
-            id: 'https://dlcs.io/thumbs/wellcome/1/f327de6b-06ef-47ec-b98f-ee79c1685393/full/72,100/0/default.jpg',
+            id:
+              'https://dlcs.io/thumbs/wellcome/1/f327de6b-06ef-47ec-b98f-ee79c1685393/full/72,100/0/default.jpg',
             type: 'Image',
             service: [
               {
                 '@context': 'http://iiif.io/api/image/2/context.json',
-                id: 'https://dlcs.io/thumbs/wellcome/1/f327de6b-06ef-47ec-b98f-ee79c1685393',
+                id:
+                  'https://dlcs.io/thumbs/wellcome/1/f327de6b-06ef-47ec-b98f-ee79c1685393',
                 protocol: 'http://iiif.io/api/image',
                 height: 1024,
                 width: 732,
@@ -729,31 +861,36 @@ describe('image utilities', () => {
       ).toEqual([
         {
           height: 100,
-          id: 'https://dlcs.io/thumbs/wellcome/1/f327de6b-06ef-47ec-b98f-ee79c1685393/full/72,100/0/default.jpg',
+          id:
+            'https://dlcs.io/thumbs/wellcome/1/f327de6b-06ef-47ec-b98f-ee79c1685393/full/72,100/0/default.jpg',
           type: 'fixed',
           width: 72,
         },
         {
           height: 100,
-          id: 'https://dlcs.io/thumbs/wellcome/1/f327de6b-06ef-47ec-b98f-ee79c1685393',
+          id:
+            'https://dlcs.io/thumbs/wellcome/1/f327de6b-06ef-47ec-b98f-ee79c1685393',
           type: 'fixed-service',
           width: 72,
         },
         {
           height: 200,
-          id: 'https://dlcs.io/thumbs/wellcome/1/f327de6b-06ef-47ec-b98f-ee79c1685393',
+          id:
+            'https://dlcs.io/thumbs/wellcome/1/f327de6b-06ef-47ec-b98f-ee79c1685393',
           type: 'fixed-service',
           width: 143,
         },
         {
           height: 400,
-          id: 'https://dlcs.io/thumbs/wellcome/1/f327de6b-06ef-47ec-b98f-ee79c1685393',
+          id:
+            'https://dlcs.io/thumbs/wellcome/1/f327de6b-06ef-47ec-b98f-ee79c1685393',
           type: 'fixed-service',
           width: 286,
         },
         {
           height: 1024,
-          id: 'https://dlcs.io/thumbs/wellcome/1/f327de6b-06ef-47ec-b98f-ee79c1685393',
+          id:
+            'https://dlcs.io/thumbs/wellcome/1/f327de6b-06ef-47ec-b98f-ee79c1685393',
           type: 'fixed-service',
           width: 732,
         },
@@ -881,7 +1018,12 @@ describe('image utilities', () => {
           loader
         )
       ).toEqual([
-        { height: 6716, id: 'https://damsssl.llgc.org.uk/iiif/2.0/image/4694557', type: 'fixed', width: 4961 },
+        {
+          height: 6716,
+          id: 'https://damsssl.llgc.org.uk/iiif/2.0/image/4694557',
+          type: 'fixed',
+          width: 4961,
+        },
         {
           id: 'https://damsssl.llgc.org.uk/iiif/2.0/image/4694557',
           maxHeight: 256,
@@ -904,7 +1046,11 @@ describe('image utilities', () => {
           },
           [() => [{ id: 'http://example.org/image.jpg', type: 'unknown' }]]
         )
-      ).toEqual({ best: { id: 'http://example.org/image.jpg', type: 'unknown' }, fallback: [] });
+      ).toEqual({
+        best: { id: 'http://example.org/image.jpg', type: 'unknown' },
+        log: [],
+        fallback: [],
+      });
     });
 
     test('exact match', () => {
@@ -917,12 +1063,23 @@ describe('image utilities', () => {
           [
             () => [
               { id: 'http://example.org/image.jpg', type: 'unknown' },
-              { id: 'http://example.org/image-1.jpg', type: 'fixed', width: 100, height: 100 },
+              {
+                id: 'http://example.org/image-1.jpg',
+                type: 'fixed',
+                width: 100,
+                height: 100,
+              },
             ],
           ]
         )
       ).toEqual({
-        best: { id: 'http://example.org/image-1.jpg', type: 'fixed', width: 100, height: 100 },
+        best: {
+          id: 'http://example.org/image-1.jpg',
+          type: 'fixed',
+          width: 100,
+          height: 100,
+        },
+        log: [],
         fallback: [],
       });
     });
@@ -937,7 +1094,14 @@ describe('image utilities', () => {
             }
             return [{ id: '', type: 'unknown' }] as ImageCandidate[];
           },
-          () => [{ id: 'http://example.org/image-1.jpg', type: 'fixed', width: 100, height: 100 }],
+          () => [
+            {
+              id: 'http://example.org/image-1.jpg',
+              type: 'fixed',
+              width: 100,
+              height: 100,
+            },
+          ],
         ])
       ).toThrow();
     });
@@ -952,16 +1116,37 @@ describe('image utilities', () => {
           },
           [
             () => [
-              { id: 'http://example.org/image-1.jpg', type: 'fixed', width: 50, height: 50 },
+              {
+                id: 'http://example.org/image-1.jpg',
+                type: 'fixed',
+                width: 50,
+                height: 50,
+              },
               { id: 'http://example.org/image.jpg', type: 'unknown' },
-              { id: 'http://example.org/image-2.jpg', type: 'fixed', width: 100, height: 100 },
+              {
+                id: 'http://example.org/image-2.jpg',
+                type: 'fixed',
+                width: 100,
+                height: 100,
+              },
             ],
           ]
         )
       ).toEqual({
-        best: { height: 100, id: 'http://example.org/image-2.jpg', type: 'fixed', width: 100 },
+        best: {
+          height: 100,
+          id: 'http://example.org/image-2.jpg',
+          type: 'fixed',
+          width: 100,
+        },
+        log: [],
         fallback: [
-          { height: 50, id: 'http://example.org/image-1.jpg', type: 'fixed', width: 50 },
+          {
+            height: 50,
+            id: 'http://example.org/image-1.jpg',
+            type: 'fixed',
+            width: 50,
+          },
           { id: 'http://example.org/image.jpg', type: 'unknown' },
         ],
       });
@@ -978,7 +1163,12 @@ describe('image utilities', () => {
           [
             () => [
               { id: 'http://example.org/image.jpg', type: 'unknown' },
-              { id: 'http://service/info.json', type: 'fixed-service', width: 256, height: 256 },
+              {
+                id: 'http://service/info.json',
+                type: 'fixed-service',
+                width: 256,
+                height: 256,
+              },
             ],
           ]
         )
@@ -990,6 +1180,7 @@ describe('image utilities', () => {
           unsafe: false,
           width: 256,
         },
+        log: [],
         fallback: [],
       });
     });
@@ -1006,15 +1197,39 @@ describe('image utilities', () => {
           [
             () => [
               { id: 'http://example.org/image.jpg', type: 'unknown' },
-              { id: 'http://service/info.json', type: 'fixed-service', width: 256, height: 256 },
+              {
+                id: 'http://service/info.json',
+                type: 'fixed-service',
+                width: 256,
+                height: 256,
+              },
             ],
-            () => [{ id: 'http://example.org/image-2.jpg', type: 'fixed', width: 110, height: 110 }],
+            () => [
+              {
+                id: 'http://example.org/image-2.jpg',
+                type: 'fixed',
+                width: 110,
+                height: 110,
+              },
+            ],
           ]
         )
       ).toEqual({
-        best: { height: 110, id: 'http://example.org/image-2.jpg', type: 'fixed', width: 110 },
+        best: {
+          height: 110,
+          id: 'http://example.org/image-2.jpg',
+          type: 'fixed',
+          width: 110,
+        },
+        log: [],
         fallback: [
-          { height: 100, id: 'http://service/full/100,100/0/default.jpg', type: 'fixed', unsafe: true, width: 100 },
+          {
+            height: 100,
+            id: 'http://service/full/100,100/0/default.jpg',
+            type: 'fixed',
+            unsafe: true,
+            width: 100,
+          },
           { id: 'http://example.org/image.jpg', type: 'unknown' },
         ],
       });
@@ -1023,7 +1238,14 @@ describe('image utilities', () => {
     test('when match found, second list is not touched', () => {
       expect(() =>
         pickBestFromCandidates({ width: 100, height: 100 }, [
-          () => [{ id: 'http://example.org/image-1.jpg', type: 'fixed', width: 100, height: 100 }],
+          () => [
+            {
+              id: 'http://example.org/image-1.jpg',
+              type: 'fixed',
+              width: 100,
+              height: 100,
+            },
+          ],
           // Because typescript.
           () => {
             if (true as false) {
@@ -1044,7 +1266,8 @@ describe('image utilities', () => {
         )
       ).toEqual({
         height: 100,
-        id: 'https://dlcs.io/thumbs/wellcome/1/f327de6b-06ef-47ec-b98f-ee79c1685393/full/72,100/0/default.jpg',
+        id:
+          'https://dlcs.io/thumbs/wellcome/1/f327de6b-06ef-47ec-b98f-ee79c1685393/full/72,100/0/default.jpg',
         type: 'fixed',
         width: 72,
       });

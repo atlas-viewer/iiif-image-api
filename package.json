@@ -43,6 +43,9 @@
       }
     }
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "dependencies": {
     "@hyperion-framework/types": "^0.3.8"
   }
