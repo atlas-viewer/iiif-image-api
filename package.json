@@ -1,6 +1,6 @@
 {
   "name": "@atlas-viewer/iiif-image-api",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "license": "MIT",
   "files": [
     "dist",
