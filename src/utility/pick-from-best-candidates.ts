@@ -25,7 +25,7 @@ export function pickBestFromCandidates(
   const log: string[] = [];
   const request: Required<ImageCandidateRequest> = Object.assign(
     {
-      unsafeImageService: true,
+      unsafeImageService: false,
       atAnyCost: true,
       fallback: true,
       minHeight: 20,
@@ -40,8 +40,15 @@ export function pickBestFromCandidates(
     },
     inputRequest
   );
-  const explain = (text: () => string) =>
-    request.explain ? log.push(text().trim()) : undefined;
+  const explain = (text: () => string, indent: number = 0) =>
+    request.explain
+      ? log.push(
+          new Array(indent)
+            .fill(0)
+            .map(e => '    ')
+            .join('') + text().trim()
+        )
+      : undefined;
   const lastResorts: UnknownSizeImage[] = [];
   const fallback: Array<FixedSizeImage | VariableSizeImage> = [];
   let currentChoice: ImageCandidate | null = null;
@@ -52,13 +59,16 @@ export function pickBestFromCandidates(
     candidate: FixedSizeImage,
     current: FixedSizeImage | null
   ) => {
+    explain(() => 'Swapping choice', 3);
+
     if (isBestMatch(request, current, candidate)) {
       // If we prefer a fixed size, we'll push it onto the fallback. But a fixed size will be looked for
       // from all of the candidates.
       if (request.preferFixedSize && candidate.unsafe) {
         explain(
           () =>
-            `We found an image that was marked as unsafe, but it was the best size. (${candidate.id})`
+            `We found an image that was marked as unsafe, but it was the best size. (${candidate.id})`,
+          4
         );
         fallback.push(candidate);
         return;
@@ -68,7 +78,8 @@ export function pickBestFromCandidates(
         fallback.push(current);
       }
       explain(
-        () => `We found a new image that was the best size. (${candidate.id})`
+        () => `We found a new image that was the best size. (${candidate.id})`,
+        4
       );
       // We have a new candidate.
       currentChoice = candidate;
@@ -84,24 +95,30 @@ export function pickBestFromCandidates(
   const candidateGroups = candidates.length;
   for (let x = 0; x < candidateGroups; x++) {
     const group = candidates[x]();
+
+    explain(() => `Candidate group ${x}: ${JSON.stringify(group, null, 2)}`, 1);
+
     const candidatesLength = group.length;
     explain(
       () =>
-        `Checking candidate list number ${x} and found ${candidatesLength} potential ways of creating image(s)`
+        `Checking candidate list number ${x} and found ${candidatesLength} potential ways of creating image(s)`,
+      1
     );
     for (let y = 0; y < candidatesLength; y++) {
       const candidate = group[y];
       if (candidate.type === 'unknown' && request.atAnyCost) {
         explain(
           () =>
-            `We've found an unknown image type, adding this to the "last resort" list`
+            `We've found an unknown image type, adding this to the "last resort" list`,
+          2
         );
         lastResorts.push(candidate);
       }
       if (candidate.type === 'fixed') {
         explain(
           () =>
-            `We've found a fixed size image, checking if it matches the request`
+            `We've found a fixed size image, checking if it matches the request`,
+          2
         );
         swapChoice(candidate, currentChoice);
       }
@@ -110,7 +127,8 @@ export function pickBestFromCandidates(
           // @todo fit within on request height/width based on candidate.
           explain(
             () =>
-              `Checking for an image from the tile source, without calculating the right height and width (unsafeImageService)`
+              `Checking for an image from the tile source, without calculating the right height and width (unsafeImageService)`,
+            2
           );
           const choice = getImageFromTileSource(
             candidate,
@@ -119,7 +137,7 @@ export function pickBestFromCandidates(
           );
           swapChoice(choice, currentChoice);
         } else {
-          explain(() => `Checking for an image from the tile source 3`);
+          explain(() => `Checking for an image from the tile source 3`, 2);
           const choice = getImageFromTileSource(
             candidate,
             candidate.width,
