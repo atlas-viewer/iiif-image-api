@@ -26,7 +26,7 @@ import { ImageCandidate, ImageCandidateRequest } from './types';
 import { getImageServices } from './utility/get-image-services';
 import { getImageCandidates } from './utility/get-image-candidates';
 import { pickBestFromCandidates } from './utility/pick-from-best-candidates';
-import fetch from 'cross-fetch';
+import axios from 'axios';
 
 export type ImageServer = {
   root: string;
@@ -336,9 +336,7 @@ export class ImageServiceLoader {
       throw new Error('Fetching is not enabled');
     }
 
-    const json = (await fetch(serviceUrl).then(service =>
-      service.json()
-    )) as Service;
+    const { data: json } = await axios.get<Service>(serviceUrl);
 
     if (!json.id && (json as any)['@id']) {
       json.id = (json as any)['@id'];

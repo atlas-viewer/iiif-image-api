@@ -48,6 +48,6 @@
   },
   "dependencies": {
     "@hyperion-framework/types": "^0.3.8",
-    "cross-fetch": "^3.0.4"
+    "axios": "^0.19.2"
   }
 }
