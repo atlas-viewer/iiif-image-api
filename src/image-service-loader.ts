@@ -26,6 +26,7 @@ import { ImageCandidate, ImageCandidateRequest } from './types';
 import { getImageServices } from './utility/get-image-services';
 import { getImageCandidates } from './utility/get-image-candidates';
 import { pickBestFromCandidates } from './utility/pick-from-best-candidates';
+import fetch from 'cross-fetch';
 
 export type ImageServer = {
   root: string;
