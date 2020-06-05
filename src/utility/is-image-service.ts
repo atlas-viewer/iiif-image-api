@@ -6,6 +6,10 @@ export function isImageService(service: Service): boolean {
     return false;
   }
 
+  if (!service.id && !service['@id']) {
+    return false;
+  }
+
   const profiles = Array.isArray(service.profile)
     ? service.profile
     : [service.profile];

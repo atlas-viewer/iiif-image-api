@@ -7,7 +7,11 @@ import { IIIFExternalWebResource, Service } from '@hyperion-framework/types';
  * @param resource
  */
 export function getImageServices(resource: IIIFExternalWebResource): Service[] {
-  const services = resource.service || [];
+  const services = resource.service
+    ? Array.isArray(resource.service)
+      ? resource.service
+      : [resource.service]
+    : [];
   const totalServices = services.length;
   const imageServices = [];
   for (let i = 0; i < totalServices; i++) {

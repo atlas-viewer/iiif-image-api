@@ -41,7 +41,7 @@ export function pickBestFromCandidates(
     inputRequest
   );
   const explain = (text: () => string, indent: number = 0) =>
-    request.explain
+    process.env.NODE_ENV !== 'production' && request.explain
       ? log.push(
           new Array(indent)
             .fill(0)

@@ -82,7 +82,9 @@ describe('image utilities', () => {
 
   describe('getFixedSizeFromImage', () => {
     test('unknown case - string', () => {
-      expect(getFixedSizeFromImage('http://example.org/image.jpg')).toEqual({
+      expect(
+        getFixedSizeFromImage('http://example.org/image.jpg' as any)
+      ).toEqual({
         id: 'http://example.org/image.jpg',
         type: 'unknown',
       });
@@ -632,6 +634,7 @@ describe('image utilities', () => {
   });
 
   describe('getImageCandidates', () => {
+    const loader = new ImageServiceLoader();
     test('static image resource', () => {
       expect(
         getImageCandidates(
@@ -641,7 +644,8 @@ describe('image utilities', () => {
             width: 100,
             height: 200,
           },
-          false
+          false,
+          loader
         )
       ).toEqual([
         {
@@ -654,14 +658,14 @@ describe('image utilities', () => {
     });
 
     test('just a url', () => {
-      expect(getImageCandidates('http://example.org/image.jpg', false)).toEqual(
-        [
-          {
-            id: 'http://example.org/image.jpg',
-            type: 'unknown',
-          },
-        ]
-      );
+      expect(
+        getImageCandidates('http://example.org/image.jpg' as any, false, loader)
+      ).toEqual([
+        {
+          id: 'http://example.org/image.jpg',
+          type: 'unknown',
+        },
+      ]);
     });
 
     test('image with embedded service (level 0)', () => {
@@ -680,7 +684,8 @@ describe('image utilities', () => {
               },
             ],
           },
-          false
+          false,
+          loader
         )
       ).toEqual([
         {
@@ -712,7 +717,8 @@ describe('image utilities', () => {
               },
             ],
           },
-          false
+          false,
+          loader
         )
       ).toEqual([
         {
@@ -753,7 +759,8 @@ describe('image utilities', () => {
               },
             ],
           },
-          false
+          false,
+          loader
         )
       ).toEqual([
         {
@@ -790,7 +797,8 @@ describe('image utilities', () => {
               },
             ],
           },
-          false
+          false,
+          loader
         )
       ).toEqual([
         {
@@ -812,10 +820,14 @@ describe('image utilities', () => {
 
     test('non image example', () => {
       expect(
-        getImageCandidates({
-          id: 'http://example.org/audio.mp3',
-          type: 'Sound',
-        })
+        getImageCandidates(
+          {
+            id: 'http://example.org/audio.mp3',
+            type: 'Sound',
+          },
+          false,
+          loader
+        )
       ).toEqual([]);
     });
 
@@ -856,7 +868,8 @@ describe('image utilities', () => {
               },
             ],
           },
-          false
+          false,
+          loader
         )
       ).toEqual([
         {
@@ -1192,6 +1205,7 @@ describe('image utilities', () => {
             width: 100,
             height: 100,
             preferFixedSize: true,
+            unsafeImageService: true,
             returnAllOptions: true,
           },
           [

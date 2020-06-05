@@ -24,7 +24,8 @@ export function getFixedSizeFromImage(
     return inferSizeFromUrl(contentResource);
   }
 
-  if (contentResource.type !== 'Image') {
+  // @ts-ignore
+  if (contentResource.type !== 'Image' && contentResource.type !== 'sc:Image') {
     return null;
   }
 

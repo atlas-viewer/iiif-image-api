@@ -28,7 +28,7 @@ import { getImageServices } from './get-image-services';
 export function getImageCandidates(
   unknownResource: ContentResource,
   dereference: boolean = true,
-  loader: ImageServiceLoader = imageServiceLoader
+  loader: ImageServiceLoader
 ): ImageCandidate[] {
   const candidates: ImageCandidate[] = [];
   const fixedSizeFromImage = getFixedSizeFromImage(unknownResource);
