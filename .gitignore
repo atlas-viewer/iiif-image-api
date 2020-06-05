@@ -5,3 +5,4 @@ lib
 *.tsbuildinfo
 .idea/workspace.xml
 coverage
+stats.html
