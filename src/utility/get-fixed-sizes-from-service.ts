@@ -16,7 +16,7 @@ export function getFixedSizesFromService(
   if (!isImageService(service)) {
     return [];
   }
-  return (service && service.sizes ? service.sizes : []).map(size => {
+  return (service && service.sizes ? service.sizes : []).map((size) => {
     return {
       id: service.id,
       type: 'fixed-service',

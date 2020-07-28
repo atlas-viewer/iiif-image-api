@@ -34,6 +34,7 @@ export function pickBestFromCandidates(
       maxWidth: Infinity,
       returnAllOptions: false,
       preferFixedSize: false,
+      allowUnsafe: false,
       explain: false,
       height: 0,
       width: 0,
@@ -45,7 +46,7 @@ export function pickBestFromCandidates(
       ? log.push(
           new Array(indent)
             .fill(0)
-            .map(e => '    ')
+            .map((e) => '    ')
             .join('') + text().trim()
         )
       : undefined;
@@ -106,6 +107,7 @@ export function pickBestFromCandidates(
     );
     for (let y = 0; y < candidatesLength; y++) {
       const candidate = group[y];
+      explain(() => `-> Checking candidate ${y}`, 1);
       if (candidate.type === 'unknown' && request.atAnyCost) {
         explain(
           () =>
@@ -115,12 +117,21 @@ export function pickBestFromCandidates(
         lastResorts.push(candidate);
       }
       if (candidate.type === 'fixed') {
-        explain(
-          () =>
-            `We've found a fixed size image, checking if it matches the request`,
-          2
-        );
-        swapChoice(candidate, currentChoice);
+        if (candidate.unsafe) {
+          explain(
+            () =>
+              `We've found an unsafe fixed image type, adding this to the "last resort" list`,
+            2
+          );
+          lastResorts.push(candidate as any);
+        } else {
+          explain(
+            () =>
+              `We've found a fixed size image, checking if it matches the request`,
+            2
+          );
+          swapChoice(candidate, currentChoice);
+        }
       }
       if (candidate.type === 'fixed-service') {
         if (request.unsafeImageService) {
@@ -147,8 +158,27 @@ export function pickBestFromCandidates(
           swapChoice(choice, currentChoice);
         }
       }
+      if (candidate.type === 'variable') {
+        if (candidate.maxWidth) {
+          const choice = getImageFromTileSource(
+            {
+              id: candidate.id,
+              type: 'fixed-service',
+              width: candidate.maxWidth,
+              height: candidate.maxWidth,
+            },
+            candidate.maxWidth
+          );
+
+          swapChoice(choice, currentChoice);
+        }
+      }
     }
     if (currentChoice && !request.returnAllOptions) {
+      if ((currentChoice as any).unsafe || request.allowUnsafe) {
+        continue;
+      }
+
       explain(
         () =>
           `We found a match in choice list number ${x}, no searching any more`
@@ -182,6 +212,7 @@ export function pickBestFromCandidates(
   }
 
   explain(() => `Returning the best image that we found, and a fallback`);
+
   return {
     best: currentChoice || fallback[0] || null,
     fallback: currentChoice ? fallback : fallback.slice(1),

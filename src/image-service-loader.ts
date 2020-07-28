@@ -14,8 +14,8 @@ import {
   ImageProfile,
   ImageSize,
   ImageTile,
-  Service,
 } from '@hyperion-framework/types';
+import { Service } from './types';
 import { getImageServerFromId } from './utility/get-image-server-from-id';
 import { canonicalServiceUrl } from './utility/canonical-service-url';
 import { fixedSizesFromScales } from './utility/fixed-sizes-from-scales';
@@ -58,6 +58,7 @@ export type ImageServiceLoaderConfig = {
   verificationsRequired: number;
   approximateServices: boolean;
   enableFetching: boolean;
+  disableThrottling: boolean;
 };
 
 export class ImageServiceLoader {
@@ -65,7 +66,10 @@ export class ImageServiceLoader {
     verificationsRequired: 1,
     approximateServices: true,
     enableFetching: true,
+    disableThrottling: false,
   };
+
+  fetchingCount = 0;
 
   imageServices: {
     [k: string]: LoadedImageService;
@@ -186,6 +190,7 @@ export class ImageServiceLoader {
     if (!this.imageServices[serviceUrl]) {
       this.imageServices[serviceUrl] = {
         '@context': imageServer.result.context,
+        '@id': resource.id,
         id: resource.id,
         protocol: 'http://iiif.io/api/image',
         tiles: sampledTilesToTiles(
@@ -202,7 +207,7 @@ export class ImageServiceLoader {
         height: resource.height,
         width: resource.width,
         real: false,
-      };
+      } as any;
     }
 
     return this.imageServices[serviceUrl];
@@ -343,6 +348,13 @@ export class ImageServiceLoader {
       json.id = (json as any)['@id'];
     }
 
+    if (json.id !== serviceId) {
+      json.id = serviceId;
+      if (json['@id']) {
+        json['@id'] = serviceId;
+      }
+    }
+
     this.imageServices[serviceUrl] = Object.assign(json, { real: true });
 
     return this.imageServices[serviceUrl];
@@ -361,6 +373,16 @@ export class ImageServiceLoader {
     resource: ImageServiceRequest,
     forceFresh: boolean = false
   ): Promise<Service> {
+    if (!this.config.disableThrottling) {
+      while (true) {
+        if (this.fetchingCount >= this.config.verificationsRequired) {
+          await new Promise((resolve) => setTimeout(resolve, 500));
+        } else {
+          break;
+        }
+      }
+    }
+
     const imageServer = this.knownImageServers[
       getImageServerFromId(resource.id)
     ];
@@ -375,8 +397,10 @@ export class ImageServiceLoader {
       // Unlikely path, but we will fall through to just load it again.
     }
 
+    this.fetchingCount++;
     // Fetch a real copy of the image service.
     const serviceJson = await this.fetchService(resource.id, forceFresh);
+    this.fetchingCount--;
 
     if (serviceJson.real) {
       this.sample(serviceJson);

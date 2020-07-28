@@ -1,5 +1,4 @@
-import { Service } from '@hyperion-framework/types';
-import { ImageCandidate } from '../types';
+import { ImageCandidate, Service } from '../types';
 import { supportsCustomSizes } from './supports-custom-sizes';
 
 /**

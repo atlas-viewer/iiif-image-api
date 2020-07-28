@@ -1,4 +1,4 @@
-import { Service } from '@hyperion-framework/types';
+import { Service } from '../types';
 import { ImageCandidate } from '../types';
 import { getFixedSizesFromService } from './get-fixed-sizes-from-service';
 import { getCustomSizeFromService } from './get-custom-size-from-service';

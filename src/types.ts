@@ -1,3 +1,9 @@
+import { ImageService } from '@hyperion-framework/types';
+
+export type Service = ImageService & {
+  real?: false;
+};
+
 export type FixedSizeImage = {
   id: string;
   type: 'fixed';
@@ -45,6 +51,7 @@ export type ImageCandidateRequest = {
   atAnyCost?: boolean;
   unsafeImageService?: boolean;
   returnAllOptions?: boolean;
+  allowUnsafe?: boolean;
   preferFixedSize?: boolean;
   explain?: boolean;
 };

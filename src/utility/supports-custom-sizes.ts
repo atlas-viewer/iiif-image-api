@@ -1,4 +1,4 @@
-import { Service } from '@hyperion-framework/types';
+import { Service } from '../types';
 import { isImageService } from './is-image-service';
 import { level1Support } from '../profiles';
 
