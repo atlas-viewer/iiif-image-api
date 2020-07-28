@@ -41,6 +41,7 @@ export function getFixedSizeFromImage(
       type: 'fixed',
       width: image.width,
       height: image.height,
+      unsafe: true,
     };
   }
 
