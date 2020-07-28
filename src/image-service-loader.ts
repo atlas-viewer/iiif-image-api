@@ -14,8 +14,8 @@ import {
   ImageProfile,
   ImageSize,
   ImageTile,
-  Service,
 } from '@hyperion-framework/types';
+import { Service } from './types';
 import { getImageServerFromId } from './utility/get-image-server-from-id';
 import { canonicalServiceUrl } from './utility/canonical-service-url';
 import { fixedSizesFromScales } from './utility/fixed-sizes-from-scales';

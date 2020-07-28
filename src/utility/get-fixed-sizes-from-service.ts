@@ -1,4 +1,4 @@
-import { Service } from '@hyperion-framework/types';
+import { Service } from '../types';
 import { FixedSizeImageService } from '../types';
 import { isImageService } from './is-image-service';
 

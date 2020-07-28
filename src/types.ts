@@ -1,3 +1,7 @@
+import { ImageService2 } from '@hyperion-framework/types';
+
+export type Service = ImageService2 & { id: string; real?: false };
+
 export type FixedSizeImage = {
   id: string;
   type: 'fixed';

@@ -76,7 +76,7 @@ export function getImageCandidates(
 
   // Embedded service.
   if (resource.service) {
-    candidates.push(...getImageCandidatesFromService(resource.service));
+    candidates.push(...getImageCandidatesFromService(resource.service as any));
   }
 
   return candidates;
