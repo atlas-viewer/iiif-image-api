@@ -343,6 +343,13 @@ export class ImageServiceLoader {
       json.id = (json as any)['@id'];
     }
 
+    if (json.id !== serviceId) {
+      json.id = serviceId;
+      if (json['@id']) {
+        json['@id'] = serviceId;
+      }
+    }
+
     this.imageServices[serviceUrl] = Object.assign(json, { real: true });
 
     return this.imageServices[serviceUrl];
