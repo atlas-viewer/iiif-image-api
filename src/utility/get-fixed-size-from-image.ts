@@ -17,7 +17,7 @@ import { inferSizeFromUrl } from './infer-size-from-url';
  * @param contentResource
  */
 export function getFixedSizeFromImage(
-  contentResource: ContentResource
+  contentResource: ContentResource | string
 ): ImageCandidate | null {
   if (typeof contentResource === 'string') {
     // Might not even be an image.
