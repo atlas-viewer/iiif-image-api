@@ -478,10 +478,10 @@
     eslint-plugin-flowtype "^4.2.0"
     eslint-plugin-prettier "^3.1.0"
 
-"@hyperion-framework/types@^1.0.0-alpha.10":
-  version "1.0.0-alpha.10"
-  resolved "https://registry.yarnpkg.com/@hyperion-framework/types/-/types-1.0.0-alpha.10.tgz#b445106caaac747d2a46aa0bbe3910715045b7f5"
-  integrity sha512-iMJ6FJ95nJqR97TSEB1J8ot2e7jHqRoQk4BV5M2tYqVVTBOU1RYVOaeIMkt2cpUiiesNgNijsNmu0ZxQ40eStQ==
+"@hyperion-framework/types@^1.0.0-alpha.14":
+  version "1.0.0-alpha.14"
+  resolved "https://registry.yarnpkg.com/@hyperion-framework/types/-/types-1.0.0-alpha.14.tgz#192c9c2596411a396467965c84d9d815c4fe78ca"
+  integrity sha512-72VmMWbvtX1c2GlndSuawJ3WUXtqCg8O1XK1E19FXe1/BTiTghXNblmrW3rSgMXjzmkg2F+rILqmsztUxX9xOg==
   dependencies:
     "@types/geojson" "^7946.0.7"
 

@@ -34,6 +34,7 @@ export function pickBestFromCandidates(
       maxWidth: Infinity,
       returnAllOptions: false,
       preferFixedSize: false,
+      allowUnsafe: false,
       explain: false,
       height: 0,
       width: 0,
@@ -173,13 +174,17 @@ export function pickBestFromCandidates(
         }
       }
     }
-    // if (currentChoice && !request.returnAllOptions) {
-    //   explain(
-    //     () =>
-    //       `We found a match in choice list number ${x}, no searching any more`
-    //   );
-    //   break;
-    // }
+    if (currentChoice && !request.returnAllOptions) {
+      if ((currentChoice as any).unsafe || request.allowUnsafe) {
+        continue;
+      }
+
+      explain(
+        () =>
+          `We found a match in choice list number ${x}, no searching any more`
+      );
+      break;
+    }
   }
 
   if (request.atAnyCost && fallback.length === 0) {

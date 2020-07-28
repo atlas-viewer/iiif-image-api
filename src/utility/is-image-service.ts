@@ -1,7 +1,7 @@
-import { Service } from '../types';
 import { imageServiceProfiles } from '../profiles';
+import { ImageService } from '@hyperion-framework/types';
 
-export function isImageService(service: Service): boolean {
+export function isImageService(service: any): service is ImageService {
   if (!service || !service.profile) {
     return false;
   }

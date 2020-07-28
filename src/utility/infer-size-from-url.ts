@@ -22,7 +22,6 @@ export function inferSizeFromUrl(image: string): ImageCandidate {
         id: image,
         height,
         width,
-        unsafe: true,
       };
     }
   }

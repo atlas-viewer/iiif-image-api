@@ -41,6 +41,6 @@
     "access": "public"
   },
   "dependencies": {
-    "@hyperion-framework/types": "^1.0.0-alpha.10"
+    "@hyperion-framework/types": "^1.0.0-alpha.14"
   }
 }

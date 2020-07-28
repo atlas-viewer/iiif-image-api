@@ -1,9 +1,10 @@
 import { ImageServiceLoader } from '../src/image-service-loader';
-import { Service } from '@hyperion-framework/types';
+import { Service } from '../src/types';
+import { ImageService } from '@hyperion-framework/types';
 
 describe('image service loader', () => {
   describe('nlw images', () => {
-    const image1 = {
+    const image1: ImageService = {
       '@context': 'http://iiif.io/api/image/2/context.json',
       id: 'https://damsssl.llgc.org.uk/iiif/2.0/image/4694557',
       protocol: 'http://iiif.io/api/image',
@@ -34,7 +35,7 @@ describe('image service loader', () => {
       ],
     };
 
-    const image2 = {
+    const image2: ImageService = {
       '@context': 'http://iiif.io/api/image/2/context.json',
       id: 'https://damsssl.llgc.org.uk/iiif/2.0/image/4694558',
       protocol: 'http://iiif.io/api/image',
@@ -65,7 +66,7 @@ describe('image service loader', () => {
       ],
     };
 
-    const image3 = {
+    const image3: ImageService = {
       '@context': 'http://iiif.io/api/image/2/context.json',
       id: 'https://damsssl.llgc.org.uk/iiif/2.0/image/4694562',
       protocol: 'http://iiif.io/api/image',
@@ -123,8 +124,8 @@ describe('image service loader', () => {
 
       const image3Prediction = loader.predict({
         id: image3.id,
-        width: image3.width,
-        height: image3.height,
+        width: image3.width as number,
+        height: image3.height as number,
       }) as Service;
 
       expect(image3Prediction.tiles).toEqual(image3.tiles);
@@ -154,8 +155,8 @@ describe('image service loader', () => {
 
       const image3Prediction = loader.predict({
         id: image3.id,
-        width: image3.width,
-        height: image3.height,
+        width: image3.width as number,
+        height: image3.height as number,
       }) as Service;
 
       expect(image3Prediction).toEqual(null);
@@ -171,8 +172,8 @@ describe('image service loader', () => {
       expect(
         loader.loadServiceSync({
           id: image1.id,
-          height: image1.height,
-          width: image1.width,
+          height: image1.height as number,
+          width: image1.width as number,
         })
       ).not.toEqual(null);
 
@@ -183,7 +184,7 @@ describe('image service loader', () => {
   });
 
   describe('bodleian', () => {
-    const image1 = {
+    const image1: ImageService = {
       '@context': 'http://iiif.io/api/image/2/context.json',
       id:
         'https://iiif.bodleian.ox.ac.uk/iiif/image/2a723665-8154-45ce-a0a9-bf82063d8000',
@@ -230,7 +231,7 @@ describe('image service loader', () => {
         },
       ],
     };
-    const image2 = {
+    const image2: ImageService = {
       '@context': 'http://iiif.io/api/image/2/context.json',
       id:
         'https://iiif.bodleian.ox.ac.uk/iiif/image/923751d3-b4d4-49e5-a44a-a1fc667ef0e2',
@@ -277,7 +278,7 @@ describe('image service loader', () => {
         },
       ],
     };
-    const image3 = {
+    const image3: ImageService = {
       '@context': 'http://iiif.io/api/image/2/context.json',
       id:
         'https://iiif.bodleian.ox.ac.uk/iiif/image/d70fc265-3b81-4243-8297-d9b34a7062ca',
@@ -335,8 +336,8 @@ describe('image service loader', () => {
 
       const image3Prediction = loader.predict({
         id: image3.id,
-        width: image3.width,
-        height: image3.height,
+        width: image3.width as number,
+        height: image3.height as number,
       }) as Service;
 
       expect(image3Prediction.tiles).toEqual(image3.tiles);

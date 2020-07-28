@@ -15,6 +15,7 @@ import {
   sizesMatch,
   supportsCustomSizes,
 } from '../src';
+import { ImageService } from '@hyperion-framework/types';
 
 describe('image utilities', () => {
   describe('sizesMatch', () => {
@@ -152,6 +153,7 @@ describe('image utilities', () => {
         type: 'fixed',
         width: 1000,
         height: 2000,
+        unsafe: true,
       });
     });
   });
@@ -162,7 +164,7 @@ describe('image utilities', () => {
         getFixedSizesFromService({
           id: 'http://example.org/service1.json',
           profile: 'some-profile',
-        })
+        } as any)
       ).toEqual([]);
     });
 
@@ -255,7 +257,7 @@ describe('image utilities', () => {
       expect(
         supportsCustomSizes({
           id: 'http://example.org/service/1',
-          profile: 'not-image-service',
+          profile: 'not-image-service' as any,
         })
       ).toEqual(false);
     });
@@ -354,7 +356,7 @@ describe('image utilities', () => {
       expect(
         getCustomSizeFromService({
           id: 'http://example.org/service/1',
-          profile: 'not-an-image-service',
+          profile: 'not-an-image-service' as any,
         })
       ).toEqual([]);
     });
@@ -653,6 +655,7 @@ describe('image utilities', () => {
           id: 'http://example.org/image.jpg',
           type: 'fixed',
           width: 100,
+          unsafe: true,
         },
       ]);
     });
@@ -693,6 +696,7 @@ describe('image utilities', () => {
           id: 'http://example.org/image.jpg',
           type: 'fixed',
           width: 1200,
+          unsafe: true,
         },
       ]);
     });
@@ -725,6 +729,7 @@ describe('image utilities', () => {
           height: 800,
           id: 'http://example.org/image.jpg',
           type: 'fixed',
+          unsafe: true,
           width: 1200,
         },
         {
@@ -767,6 +772,7 @@ describe('image utilities', () => {
           height: 800,
           id: 'http://example.org/image.jpg',
           type: 'fixed',
+          unsafe: true,
           width: 1200,
         },
         {
@@ -805,6 +811,7 @@ describe('image utilities', () => {
           height: 800,
           id: 'http://example.org/image.jpg',
           type: 'fixed',
+          unsafe: true,
           width: 1200,
         },
         {
@@ -912,7 +919,7 @@ describe('image utilities', () => {
   });
 
   describe('getImageCandidates - dereferenced', () => {
-    const image1 = {
+    const image1: ImageService = {
       '@context': 'http://iiif.io/api/image/2/context.json',
       id: 'https://damsssl.llgc.org.uk/iiif/2.0/image/4694557',
       protocol: 'http://iiif.io/api/image',
@@ -943,7 +950,7 @@ describe('image utilities', () => {
       ],
     };
 
-    const image2 = {
+    const image2: ImageService = {
       '@context': 'http://iiif.io/api/image/2/context.json',
       id: 'https://damsssl.llgc.org.uk/iiif/2.0/image/4694558',
       protocol: 'http://iiif.io/api/image',
@@ -1017,8 +1024,8 @@ describe('image utilities', () => {
           {
             id: image1.id,
             type: 'Image',
-            width: image1.width,
-            height: image1.height,
+            width: image1.width as number,
+            height: image1.height as number,
             service: [
               {
                 id: image1.id,
@@ -1035,6 +1042,7 @@ describe('image utilities', () => {
           height: 6716,
           id: 'https://damsssl.llgc.org.uk/iiif/2.0/image/4694557',
           type: 'fixed',
+          unsafe: true,
           width: 4961,
         },
         {
@@ -1269,6 +1277,29 @@ describe('image utilities', () => {
           },
         ])
       ).not.toThrow();
+    });
+
+    test('when unsafe match found, second list is IS touched', () => {
+      expect(() =>
+        pickBestFromCandidates({ width: 100, height: 100 }, [
+          () => [
+            {
+              id: 'http://example.org/image-1.jpg',
+              type: 'fixed',
+              unsafe: true,
+              width: 100,
+              height: 100,
+            },
+          ],
+          // Because typescript.
+          () => {
+            if (true as false) {
+              throw new Error();
+            }
+            return [{ id: '', type: 'unknown' }] as ImageCandidate[];
+          },
+        ])
+      ).toThrow();
     });
   });
 
