@@ -6,7 +6,7 @@ export function isImageService(service: any): service is ImageService {
     return false;
   }
 
-  if (!service.id && !service['@id']) {
+  if (!getId(service)) {
     return false;
   }
 

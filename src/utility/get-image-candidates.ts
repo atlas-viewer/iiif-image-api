@@ -48,7 +48,7 @@ export function getImageCandidates(
     const imageServices = getImageServices(resource);
     for (const service of imageServices) {
       const request: ImageServiceRequest = {
-        id: service.id,
+        id: getId(service),
         width: resource.width,
         height: resource.height,
       };

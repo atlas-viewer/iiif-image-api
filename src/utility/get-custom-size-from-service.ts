@@ -31,7 +31,7 @@ export function getCustomSizeFromService(service: Service): ImageCandidate[] {
       if (profile.maxHeight || profile.maxWidth) {
         return [
           {
-            id: service.id,
+            id: getId(service),
             type: 'variable',
             minWidth: 0,
             minHeight: 0,
@@ -49,7 +49,7 @@ export function getCustomSizeFromService(service: Service): ImageCandidate[] {
       const tile = service.tiles[y];
       if (tile.height || tile.width) {
         imagesSizes.push({
-          id: service.id,
+          id: getId(service),
           type: 'variable',
           minHeight: 0,
           minWidth: 0,

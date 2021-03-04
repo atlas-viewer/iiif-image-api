@@ -6,7 +6,7 @@ export function getImageFromTileSource(
   targetWidth: number,
   targetHeight?: number
 ): FixedSizeImage {
-  const id = canonicalServiceUrl(image.id).slice(0, -10);
+  const id = canonicalServiceUrl(getId(image)).slice(0, -10);
   const url = [
     id,
     'full',

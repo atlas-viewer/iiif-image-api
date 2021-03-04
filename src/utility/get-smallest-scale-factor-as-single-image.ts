@@ -36,7 +36,7 @@ export function getSmallestScaleFactorAsSingleImage(
           service.height / size <= targetSize
         ) {
           return {
-            id: service.id,
+            id: getId(service),
             type: 'fixed-service',
             width: (service.width / size) | 0,
             height: (service.height / size) | 0,

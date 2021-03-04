@@ -4,6 +4,7 @@ import {
 } from '@hyperion-framework/types';
 import { ImageCandidate } from '../types';
 import { inferSizeFromUrl } from './infer-size-from-url';
+import { getType } from './get-type';
 
 /**
  * Get fixed size from image
@@ -25,19 +26,21 @@ export function getFixedSizeFromImage(
   }
 
   // @ts-ignore
-  if (contentResource.type !== 'Image' && contentResource.type !== 'sc:Image') {
+  const type = getType(contentResource);
+  if (type !== 'Image' && type !== 'sc:Image') {
     return null;
   }
 
   const image = contentResource as IIIFExternalWebResource;
+  const id = getId(image);
 
-  if (!image.id) {
+  if (!id) {
     return null;
   }
 
-  if (image.id && image.width && image.height) {
+  if (id && image.width && image.height) {
     return {
-      id: image.id,
+      id: id,
       type: 'fixed',
       width: image.width,
       height: image.height,
@@ -45,5 +48,5 @@ export function getFixedSizeFromImage(
     };
   }
 
-  return inferSizeFromUrl(image.id);
+  return inferSizeFromUrl(id);
 }
