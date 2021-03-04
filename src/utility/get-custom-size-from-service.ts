@@ -1,5 +1,6 @@
 import { ImageCandidate, Service } from '../types';
 import { supportsCustomSizes } from './supports-custom-sizes';
+import { getId } from './get-id';
 
 /**
  * Get custom size from service

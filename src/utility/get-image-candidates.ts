@@ -11,6 +11,7 @@ import { ImageCandidate } from '../types';
 import { getFixedSizeFromImage } from './get-fixed-size-from-image';
 import { getImageCandidatesFromService } from './get-image-candidates-from-service';
 import { getImageServices } from './get-image-services';
+import { getId } from './get-id';
 
 /**
  * Get image candidates

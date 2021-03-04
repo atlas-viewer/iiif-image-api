@@ -1,6 +1,7 @@
 import { Service } from '@hyperion-framework/types';
 import { FixedSizeImageService } from '../types';
 import { isImageService } from './is-image-service';
+import { getId } from './get-id';
 
 /**
  * Get fixed sizes from service.

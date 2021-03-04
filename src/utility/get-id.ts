@@ -1,4 +1,4 @@
-function getId(resource: any) {
+export function getId(resource: any) {
   if (resource['@id']) {
     return resource['@id'];
   }

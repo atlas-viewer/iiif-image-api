@@ -5,6 +5,7 @@ import {
 import { ImageCandidate } from '../types';
 import { inferSizeFromUrl } from './infer-size-from-url';
 import { getType } from './get-type';
+import { getId } from './get-id';
 
 /**
  * Get fixed size from image

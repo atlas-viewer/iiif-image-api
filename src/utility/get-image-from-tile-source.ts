@@ -1,5 +1,6 @@
 import { FixedSizeImage, FixedSizeImageService } from '../types';
 import { canonicalServiceUrl } from './canonical-service-url';
+import { getId } from './get-id';
 
 export function getImageFromTileSource(
   image: FixedSizeImageService,

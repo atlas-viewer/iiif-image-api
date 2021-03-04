@@ -1,5 +1,6 @@
 import { Service } from '../types';
 import { FixedSizeImageService } from '../types';
+import { getId } from './get-id';
 
 /**
  * Returns a fixed size image using the tile using the largest available size,
