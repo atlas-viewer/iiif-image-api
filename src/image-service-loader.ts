@@ -26,6 +26,7 @@ import { ImageCandidate, ImageCandidateRequest } from './types';
 import { getImageServices } from './utility/get-image-services';
 import { getImageCandidates } from './utility/get-image-candidates';
 import { pickBestFromCandidates } from './utility/pick-from-best-candidates';
+import { getId } from './utility/get-id';
 
 export type ImageServer = {
   root: string;
@@ -104,8 +105,8 @@ export class ImageServiceLoader {
    * @param preLoaded Mark this as being pre-loaded (default: true)
    */
   sample(service: Service, preLoaded: boolean = true) {
-    const server = getImageServerFromId(service.id);
-    const serviceUrl = canonicalServiceUrl(service.id);
+    const server = getImageServerFromId(getId(service));
+    const serviceUrl = canonicalServiceUrl(getId(service));
     const existing = this.knownImageServers[server];
 
     this.imageServices[serviceUrl] = Object.assign(service, { real: true });
@@ -119,7 +120,7 @@ export class ImageServiceLoader {
       malformed: false,
       root: server,
       preLoaded,
-      sampledId: service.id,
+      sampledId: getId(service),
       verified: false,
       server: null,
       result: {
@@ -171,7 +172,7 @@ export class ImageServiceLoader {
     verify: boolean = false,
     force: boolean = false
   ): Service | null {
-    const serverId = getImageServerFromId(resource.id);
+    const serverId = getImageServerFromId(getId(resource));
     const imageServer = this.knownImageServers[serverId];
 
     // No known image server.
@@ -185,13 +186,13 @@ export class ImageServiceLoader {
       return null;
     }
 
-    const serviceUrl = canonicalServiceUrl(resource.id);
+    const serviceUrl = canonicalServiceUrl(getId(resource));
 
     if (!this.imageServices[serviceUrl]) {
       this.imageServices[serviceUrl] = {
         '@context': imageServer.result.context,
-        '@id': resource.id,
-        id: resource.id,
+        '@id': getId(resource),
+        id: getId(resource),
         protocol: 'http://iiif.io/api/image',
         tiles: sampledTilesToTiles(
           resource.width,
@@ -240,7 +241,7 @@ export class ImageServiceLoader {
       const imageServices = getImageServices(resource);
       for (const service of imageServices) {
         const request: ImageServiceRequest = {
-          id: service.id,
+          id: getId(service),
           width: resource.width,
           height: resource.height,
         };
@@ -262,7 +263,7 @@ export class ImageServiceLoader {
    */
   async verify(resource: ImageServiceRequest): Promise<boolean> {
     const prediction = this.predict(resource, false, true);
-    const imageService = await this.fetchService(resource.id);
+    const imageService = await this.fetchService(getId(resource));
 
     if (!prediction) {
       return false;
@@ -276,7 +277,7 @@ export class ImageServiceLoader {
     // @todo profiles match.
 
     if (isValid) {
-      const serverId = getImageServerFromId(resource.id);
+      const serverId = getImageServerFromId(getId(resource));
       this.knownImageServers[serverId].verifications += 1;
       if (
         this.knownImageServers[serverId].verifications >=
@@ -290,7 +291,7 @@ export class ImageServiceLoader {
   }
 
   canLoadSync(service: ImageServiceRequest | Service | string): boolean {
-    const serviceId = typeof service === 'string' ? service : service.id;
+    const serviceId = typeof service === 'string' ? service : getId(service);
     const canonical = canonicalServiceUrl(serviceId);
     if (this.imageServices[canonical]) {
       return true;
@@ -313,7 +314,7 @@ export class ImageServiceLoader {
    * @param resource
    */
   async markAsMalformed(resource: ImageServiceRequest): Promise<Service> {
-    this.knownImageServers[getImageServerFromId(resource.id)].malformed = true;
+    this.knownImageServers[getImageServerFromId(getId(resource))].malformed = true;
     return this.loadService(resource, true);
   }
 
@@ -384,7 +385,7 @@ export class ImageServiceLoader {
     }
 
     const imageServer = this.knownImageServers[
-      getImageServerFromId(resource.id)
+      getImageServerFromId(getId(resource))
     ];
     if (imageServer && !imageServer.malformed && !forceFresh) {
       // We have a known image server, let wait for it.
@@ -399,7 +400,7 @@ export class ImageServiceLoader {
 
     this.fetchingCount++;
     // Fetch a real copy of the image service.
-    const serviceJson = await this.fetchService(resource.id, forceFresh);
+    const serviceJson = await this.fetchService(getId(resource), forceFresh);
     this.fetchingCount--;
 
     if (serviceJson.real) {
@@ -416,7 +417,7 @@ export class ImageServiceLoader {
    * @param resource
    */
   loadServiceSync(resource: ImageServiceRequest): Service | null {
-    const serviceId = canonicalServiceUrl(resource.id);
+    const serviceId = canonicalServiceUrl(getId(resource));
 
     if (this.imageServices[serviceId]) {
       return this.imageServices[serviceId];
