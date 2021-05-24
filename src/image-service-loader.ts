@@ -38,6 +38,7 @@ export type ImageServer = {
   malformed: boolean;
   result: {
     context: string | string[];
+    resourceServiceRatio: number;
     sampledSizes: ImageSize[];
     sizeRatios: number[];
     sampledTiles: ImageTile[];
@@ -104,7 +105,7 @@ export class ImageServiceLoader {
    * @param service
    * @param preLoaded Mark this as being pre-loaded (default: true)
    */
-  sample(service: Service, preLoaded: boolean = true) {
+  sample(service: Service, imageServiceRequest?: ImageServiceRequest, preLoaded: boolean = true) {
     const server = getImageServerFromId(getId(service));
     const serviceUrl = canonicalServiceUrl(getId(service));
     const existing = this.knownImageServers[server];
@@ -126,6 +127,7 @@ export class ImageServiceLoader {
       result: {
         context: service['@context'] || [],
         sampledProfile: service.profile,
+        resourceServiceRatio: imageServiceRequest && service.height ? imageServiceRequest.height / service.height : 1,
         sampledSizes: service.sizes || [],
         sizeRatios: extractFixedSizeScales(
           service.width as number,
@@ -200,9 +202,9 @@ export class ImageServiceLoader {
           imageServer.result.sampledTiles
         ),
         sizes: fixedSizesFromScales(
-          resource.width,
-          resource.height,
-          imageServer.result.sizeRatios
+          Math.floor(resource.width / imageServer.result.resourceServiceRatio),
+          Math.floor(resource.height / imageServer.result.resourceServiceRatio),
+          imageServer.result.sizeRatios,
         ),
         profile: imageServer.result.sampledProfile,
         height: resource.height,
@@ -242,8 +244,8 @@ export class ImageServiceLoader {
       for (const service of imageServices) {
         const request: ImageServiceRequest = {
           id: getId(service),
-          width: resource.width,
-          height: resource.height,
+          width: service.width ? service.width : resource.width,
+          height: service.height ? service.height : resource.height,
         };
         await this.loadService(request);
       }
@@ -404,7 +406,7 @@ export class ImageServiceLoader {
     this.fetchingCount--;
 
     if (serviceJson.real) {
-      this.sample(serviceJson);
+      this.sample(serviceJson, resource);
     }
 
     return serviceJson;
