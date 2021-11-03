@@ -16,11 +16,7 @@ export function getImageServices(resource: IIIFExternalWebResource): Service[] {
   const totalServices = services.length;
   const imageServices = [];
   for (let i = 0; i < totalServices; i++) {
-    if (
-      isImageService((services as Service[])[i]) &&
-      resource.width &&
-      resource.height
-    ) {
+    if (isImageService((services as Service[])[i])) {
       imageServices.push(services[i]);
     }
   }

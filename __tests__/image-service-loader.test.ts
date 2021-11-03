@@ -352,4 +352,53 @@ describe('image service loader', () => {
       ).toEqual(true);
     });
   });
+
+  describe('sbb', () => {
+    const sbbInfo = {
+      '@context': 'http://iiif.io/api/image/2/context.json',
+      '@id':
+        'https://iiif-content.crossasia.org/xasia/dllm+dllm_0005978+233695',
+      '@type': 'iiif:Image',
+      protocol: 'http://iiif.io/api/image',
+      width: 1741,
+      height: 2381,
+      sizes: [
+        { width: 150, height: 100 },
+        {
+          width: 600,
+          height: 400,
+        },
+        { width: 2400, height: 4000 },
+        { width: 1722, height: 2304 },
+      ],
+      tiles: [
+        { width: 256, scaleFactors: [1] },
+        {
+          width: 512,
+          scaleFactors: [2, 4],
+        },
+        { width: 1024, scaleFactors: [8, 16] },
+      ],
+      logo: {
+        '@id': 'https://iiif-content.crossasia.org/xasia/logo',
+        service: {
+          '@context': 'http://iiif.io/api/image/2/context.json',
+          '@id': 'https://iiif-content.crossasia.org/xasia/logo',
+          profile: 'http://iiif.io/api/image/2/level2.json',
+        },
+      },
+      profile: [
+        'http://iiif.io/api/image/2/level2.json',
+        {
+          formats: ['jpg', 'png', 'webp', 'tif'],
+          qualities: ['color', 'gray'],
+          supports: [
+            'canonicalLinkHeader',
+            'rotationArbitrary',
+            'profileLinkHeader',
+          ],
+        },
+      ],
+    };
+  });
 });
