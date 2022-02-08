@@ -26,7 +26,7 @@ export * from './utility/parse-region-parameter';
 export * from './utility/parse-rotation-parameter';
 export * from './utility/parse-size-parameter';
 export * from './utility/pick-from-best-candidates';
-export * from './utility/region-paramter-to-string';
+export * from './utility/region-parameter-to-string';
 export * from './utility/rotation-parameter-to-string';
 export * from './utility/sampled-tiles-to-tiles';
 export * from './utility/size-parameter-to-string';

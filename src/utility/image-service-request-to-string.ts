@@ -1,5 +1,5 @@
 import { ImageServiceImageRequest } from '../types';
-import { regionParameterToString } from './region-paramter-to-string';
+import { regionParameterToString } from './region-parameter-to-string';
 import { sizeParameterToString } from './size-parameter-to-string';
 import { rotationParameterToString } from './rotation-parameter-to-string';
 import { ImageService } from '@iiif/presentation-3';
