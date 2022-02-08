@@ -22,6 +22,7 @@ export * from './utility/is-best-match';
 export * from './utility/is-image-service';
 export * from './utility/level-to-profile';
 export * from './utility/parse-image-service-request';
+export * from './utility/parse-image-service-url';
 export * from './utility/parse-region-parameter';
 export * from './utility/parse-rotation-parameter';
 export * from './utility/parse-size-parameter';
