@@ -15,7 +15,7 @@ import {
   sizesMatch,
   supportsCustomSizes,
 } from '../src';
-import { ImageService } from '@hyperion-framework/types';
+import { ImageService } from '@iiif/presentation-3';
 
 describe('image utilities', () => {
   describe('sizesMatch', () => {

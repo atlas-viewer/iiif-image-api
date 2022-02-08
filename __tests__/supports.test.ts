@@ -4,7 +4,7 @@ import { supports } from '../src/utility/supports';
 import { imageServiceSupportsFormat } from '../src/utility/image-service-supports-format';
 import { imageServiceSupportsRequest } from '../src/utility/image-service-supports-request';
 import { parseImageServiceRequest } from '../src/utility/parse-image-service-request';
-import { ImageService } from '@hyperion-framework/types';
+import { ImageService } from '@iiif/presentation-3';
 import { imageServiceRequestToString } from '../src/utility/image-service-request-to-string';
 
 describe('supports', function () {
