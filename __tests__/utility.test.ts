@@ -15,7 +15,7 @@ import {
   sizesMatch,
   supportsCustomSizes,
 } from '../src';
-import { ImageService } from '@hyperion-framework/types';
+import { ImageService } from '@iiif/presentation-3';
 
 describe('image utilities', () => {
   describe('sizesMatch', () => {
@@ -25,15 +25,11 @@ describe('image utilities', () => {
     });
 
     test('lengths dont match - same values, in same order', () => {
-      expect(
-        sizesMatch([{ height: 100, width: 120 }], [{ height: 100, width: 120 }])
-      ).toEqual(true);
+      expect(sizesMatch([{ height: 100, width: 120 }], [{ height: 100, width: 120 }])).toEqual(true);
     });
 
     test('lengths match, sizes different', () => {
-      expect(
-        sizesMatch([{ height: 100, width: 100 }], [{ width: 200, height: 200 }])
-      ).toEqual(false);
+      expect(sizesMatch([{ height: 100, width: 100 }], [{ width: 200, height: 200 }])).toEqual(false);
     });
 
     test('same sizes, out of order', () => {
@@ -83,9 +79,7 @@ describe('image utilities', () => {
 
   describe('getFixedSizeFromImage', () => {
     test('unknown case - string', () => {
-      expect(
-        getFixedSizeFromImage('http://example.org/image.jpg' as any)
-      ).toEqual({
+      expect(getFixedSizeFromImage('http://example.org/image.jpg' as any)).toEqual({
         id: 'http://example.org/image.jpg',
         type: 'unknown',
       });
@@ -101,9 +95,7 @@ describe('image utilities', () => {
     });
 
     test('no id provided, invalid image but valid content resource.. technically', () => {
-      expect(
-        getFixedSizeFromImage({ type: 'Image', value: 'some textual value' })
-      ).toEqual(null);
+      expect(getFixedSizeFromImage({ type: 'Image', value: 'some textual value' })).toEqual(null);
     });
 
     test('almost an image, but no dimensions', () => {
@@ -214,21 +206,17 @@ describe('image utilities', () => {
 
   describe('canonicalServiceUrl', () => {
     test('already canonical', () => {
-      expect(
-        canonicalServiceUrl('http://example.org/image-1/info.json')
-      ).toEqual('http://example.org/image-1/info.json');
+      expect(canonicalServiceUrl('http://example.org/image-1/info.json')).toEqual(
+        'http://example.org/image-1/info.json'
+      );
     });
 
     test('trailing slash', () => {
-      expect(canonicalServiceUrl('http://example.org/image-1/')).toEqual(
-        'http://example.org/image-1/info.json'
-      );
+      expect(canonicalServiceUrl('http://example.org/image-1/')).toEqual('http://example.org/image-1/info.json');
     });
 
     test('no trailing slash', () => {
-      expect(canonicalServiceUrl('http://example.org/image-1')).toEqual(
-        'http://example.org/image-1/info.json'
-      );
+      expect(canonicalServiceUrl('http://example.org/image-1')).toEqual('http://example.org/image-1/info.json');
     });
 
     describe('getImageServerFromId', () => {
@@ -237,17 +225,11 @@ describe('image utilities', () => {
       });
 
       test('server with protocol, which gets stripped off', () => {
-        expect(getImageServerFromId('https://example.org')).toEqual(
-          'example.org'
-        );
+        expect(getImageServerFromId('https://example.org')).toEqual('example.org');
       });
 
       test('server wit path', () => {
-        expect(
-          getImageServerFromId(
-            'https://example.org/some-image/something/here.json'
-          )
-        ).toEqual('example.org');
+        expect(getImageServerFromId('https://example.org/some-image/something/here.json')).toEqual('example.org');
       });
     });
   });
@@ -305,10 +287,7 @@ describe('image utilities', () => {
       expect(
         supportsCustomSizes({
           id: 'http://example.org/service/1',
-          profile: [
-            'level0',
-            { supports: ['regionByPx', 'sizeByWh', 'sizeByW'] },
-          ],
+          profile: ['level0', { supports: ['regionByPx', 'sizeByWh', 'sizeByW'] }],
         })
       ).toEqual(true);
     });
@@ -661,9 +640,7 @@ describe('image utilities', () => {
     });
 
     test('just a url', () => {
-      expect(
-        getImageCandidates('http://example.org/image.jpg' as any, false, loader)
-      ).toEqual([
+      expect(getImageCandidates('http://example.org/image.jpg' as any, false, loader)).toEqual([
         {
           id: 'http://example.org/image.jpg',
           type: 'unknown',
@@ -842,14 +819,12 @@ describe('image utilities', () => {
       expect(
         getImageCandidates(
           {
-            id:
-              'https://dlcs.io/thumbs/wellcome/1/f327de6b-06ef-47ec-b98f-ee79c1685393/full/72,100/0/default.jpg',
+            id: 'https://dlcs.io/thumbs/wellcome/1/f327de6b-06ef-47ec-b98f-ee79c1685393/full/72,100/0/default.jpg',
             type: 'Image',
             service: [
               {
                 '@context': 'http://iiif.io/api/image/2/context.json',
-                id:
-                  'https://dlcs.io/thumbs/wellcome/1/f327de6b-06ef-47ec-b98f-ee79c1685393',
+                id: 'https://dlcs.io/thumbs/wellcome/1/f327de6b-06ef-47ec-b98f-ee79c1685393',
                 protocol: 'http://iiif.io/api/image',
                 height: 1024,
                 width: 732,
@@ -881,36 +856,31 @@ describe('image utilities', () => {
       ).toEqual([
         {
           height: 100,
-          id:
-            'https://dlcs.io/thumbs/wellcome/1/f327de6b-06ef-47ec-b98f-ee79c1685393/full/72,100/0/default.jpg',
+          id: 'https://dlcs.io/thumbs/wellcome/1/f327de6b-06ef-47ec-b98f-ee79c1685393/full/72,100/0/default.jpg',
           type: 'fixed',
           width: 72,
         },
         {
           height: 100,
-          id:
-            'https://dlcs.io/thumbs/wellcome/1/f327de6b-06ef-47ec-b98f-ee79c1685393',
+          id: 'https://dlcs.io/thumbs/wellcome/1/f327de6b-06ef-47ec-b98f-ee79c1685393',
           type: 'fixed-service',
           width: 72,
         },
         {
           height: 200,
-          id:
-            'https://dlcs.io/thumbs/wellcome/1/f327de6b-06ef-47ec-b98f-ee79c1685393',
+          id: 'https://dlcs.io/thumbs/wellcome/1/f327de6b-06ef-47ec-b98f-ee79c1685393',
           type: 'fixed-service',
           width: 143,
         },
         {
           height: 400,
-          id:
-            'https://dlcs.io/thumbs/wellcome/1/f327de6b-06ef-47ec-b98f-ee79c1685393',
+          id: 'https://dlcs.io/thumbs/wellcome/1/f327de6b-06ef-47ec-b98f-ee79c1685393',
           type: 'fixed-service',
           width: 286,
         },
         {
           height: 1024,
-          id:
-            'https://dlcs.io/thumbs/wellcome/1/f327de6b-06ef-47ec-b98f-ee79c1685393',
+          id: 'https://dlcs.io/thumbs/wellcome/1/f327de6b-06ef-47ec-b98f-ee79c1685393',
           type: 'fixed-service',
           width: 732,
         },
@@ -1185,7 +1155,7 @@ describe('image utilities', () => {
             () => [
               { id: 'http://example.org/image.jpg', type: 'unknown' },
               {
-                id: 'http://service/info.json',
+                id: 'http://service.com/path/info.json',
                 type: 'fixed-service',
                 width: 256,
                 height: 256,
@@ -1196,7 +1166,7 @@ describe('image utilities', () => {
       ).toEqual({
         best: {
           height: 256,
-          id: 'http://service/full/256,256/0/default.jpg',
+          id: 'http://service.com/path/full/256,256/0/default.jpg',
           type: 'fixed',
           unsafe: false,
           width: 256,
@@ -1220,7 +1190,7 @@ describe('image utilities', () => {
             () => [
               { id: 'http://example.org/image.jpg', type: 'unknown' },
               {
-                id: 'http://service/info.json',
+                id: 'http://service.com/path/info.json',
                 type: 'fixed-service',
                 width: 256,
                 height: 256,
@@ -1247,7 +1217,7 @@ describe('image utilities', () => {
         fallback: [
           {
             height: 100,
-            id: 'http://service/full/100,100/0/default.jpg',
+            id: 'http://service.com/path/full/100,100/0/default.jpg',
             type: 'fixed',
             unsafe: true,
             width: 100,
@@ -1311,8 +1281,7 @@ describe('image utilities', () => {
         )
       ).toEqual({
         height: 100,
-        id:
-          'https://dlcs.io/thumbs/wellcome/1/f327de6b-06ef-47ec-b98f-ee79c1685393/full/72,100/0/default.jpg',
+        id: 'https://dlcs.io/thumbs/wellcome/1/f327de6b-06ef-47ec-b98f-ee79c1685393/full/72,100/0/default.jpg',
         type: 'fixed',
         width: 72,
       });

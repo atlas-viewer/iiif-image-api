@@ -12,7 +12,6 @@ export function isBestMatch(
     candidate.width <= request.maxWidth &&
     candidate.height >= request.minHeight &&
     candidate.width >= request.minWidth &&
-    (!current ||
-      Math.abs(candidate.width - width) < Math.abs(current.width - width))
+    (!current || Math.abs(candidate.width - width) < Math.abs(current.width - width))
   );
 }

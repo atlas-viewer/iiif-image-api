@@ -1,4 +1,4 @@
-import { Service } from '@hyperion-framework/types';
+import { Service } from '@iiif/presentation-3';
 import { FixedSizeImageService } from '../types';
 import { isImageService } from './is-image-service';
 import { getId } from './get-id';
@@ -11,9 +11,7 @@ import { getId } from './get-id';
  *
  * @param service
  */
-export function getFixedSizesFromService(
-  service: Service
-): FixedSizeImageService[] {
+export function getFixedSizesFromService(service: Service): FixedSizeImageService[] {
   if (!isImageService(service)) {
     return [];
   }

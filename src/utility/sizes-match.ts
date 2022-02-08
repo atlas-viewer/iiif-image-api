@@ -1,4 +1,4 @@
-import { ImageSize } from '@hyperion-framework/types';
+import { ImageSize } from '@iiif/presentation-3';
 
 export function sizesMatch(sizesA: ImageSize[], sizesB: ImageSize[]): boolean {
   if (sizesA.length !== sizesB.length) {
@@ -26,10 +26,7 @@ export function sizesMatch(sizesA: ImageSize[], sizesB: ImageSize[]): boolean {
   let matching = 0;
   for (let a = 0; a < len; a++) {
     for (let b = 0; b < len; b++) {
-      if (
-        sizesA[a].width === sizesB[b].width &&
-        sizesA[a].height === sizesB[b].height
-      ) {
+      if (sizesA[a].width === sizesB[b].width && sizesA[a].height === sizesB[b].height) {
         matching++;
         break;
       }

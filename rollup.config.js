@@ -1,61 +1,91 @@
-import typescript from '@rollup/plugin-typescript';
-import resolve from '@rollup/plugin-node-resolve';
-import commonjs from '@rollup/plugin-commonjs';
-import { terser } from 'rollup-plugin-terser';
-import visualizer from 'rollup-plugin-visualizer';
+import { createRollupConfig, createTypeConfig } from 'rollup-library-template';
 import replace from '@rollup/plugin-replace';
-import compiler from '@ampproject/rollup-plugin-closure-compiler';
-import pkg from './package.json';
 
-const globalName = 'IIIFImageApi';
-const external = [];
+const nodeExternal = ['node-fetch'];
+const nodeCjsExternal = [
+  'node-domexception',
+  'node:https',
+  'node:buffer',
+  'node:stream',
+  'node:zlib',
+  'node:http',
+  'node:util',
+  'node:url',
+  'node:net',
+  'node:path',
+  'node:fs',
+  'node:worker_threads',
+];
+const baseConfig = {
+  filesize: true,
+  minify: true,
+  extra: {
+    treeshake: true,
+  },
+  esbuildOptions: {
+    define: {
+      'process.env.NODE_ENV': '"production"',
+    },
+  },
+  postProcess: (config) => {
+    config.plugins = [
+      replace({
+        values: {
+          'process.env.NODE_ENV': '"production"',
+        },
+        preventAssignment: false,
+      }),
+      ...config.plugins,
+    ];
 
+    return config;
+  },
+};
+
+// Roll up configs
 export default [
-  {
-    input: 'src/index.ts',
-    output: [
-      {
-        file: pkg.web,
-        name: globalName,
-        format: 'umd',
-        sourcemap: true,
-      },
-    ],
-    plugins: [
-      typescript({ target: 'es5' }),
-      replace({
-        'process.env.NODE_ENV': JSON.stringify('production'),
-      }),
-      resolve({ browser: true }), // so Rollup can find `ms`
-      commonjs({ extensions: ['.js', '.ts'] }), // the ".ts" extension is required
-      terser(),
-      compiler(),
-    ],
-    external,
-  },
-  {
-    input: 'src/index.ts',
-    output: [
-      {
-        file: pkg.main,
-        format: 'cjs',
-        sourcemap: true,
-      },
-      {
-        file: pkg.module,
-        format: 'es',
-        sourcemap: true,
-      },
-    ],
-    external: ['crypto', ...external, ...Object.keys(pkg.dependencies)],
-    plugins: [
-      typescript(),
-      replace({
-        'process.env.NODE_ENV': JSON.stringify('production'),
-      }),
-      resolve(), // so Rollup can find `ms`
-      commonjs({ extensions: ['.js', '.ts'] }), // the ".ts" extension is required
-      visualizer(),
-    ],
-  },
+  createTypeConfig({
+    source: './.build/types/index.d.ts',
+  }),
+
+  // UMD bundle will have everything.
+  createRollupConfig({
+    ...baseConfig,
+    inlineDynamicImports: true,
+    input: './src/index.ts',
+    output: {
+      name: 'IIIFImageApi',
+      file: `dist/index.umd.js`,
+      format: 'umd',
+    },
+    nodeResolve: {
+      browser: false,
+    },
+  }),
+
+  createRollupConfig({
+    ...baseConfig,
+    input: './src/index.ts',
+    distPreset: 'esm',
+  }),
+  createRollupConfig({
+    ...baseConfig,
+    input: './src/index.ts',
+    distPreset: 'cjs',
+  }),
+  createRollupConfig({
+    ...baseConfig,
+    input: './src/index.node.ts',
+    distPreset: 'esm',
+    node: true,
+    esmExtension: true,
+    external: nodeExternal,
+  }),
+  createRollupConfig({
+    ...baseConfig,
+    input: './src/index.node.ts',
+    distPreset: 'cjs',
+    node: true,
+    external: nodeCjsExternal,
+  }),
 ];

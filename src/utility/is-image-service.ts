@@ -1,5 +1,5 @@
 import { imageServiceProfiles } from '../profiles';
-import { ImageService } from '@hyperion-framework/types';
+import { ImageService } from '@iiif/presentation-3';
 import { getId } from './get-id';
 
 export function isImageService(service: any): service is ImageService {
@@ -11,15 +11,10 @@ export function isImageService(service: any): service is ImageService {
     return false;
   }
 
-  const profiles = Array.isArray(service.profile)
-    ? service.profile
-    : [service.profile];
+  const profiles = Array.isArray(service.profile) ? service.profile : [service.profile];
 
   for (const profile of profiles) {
-    if (
-      typeof profile === 'string' &&
-      imageServiceProfiles.indexOf(profile) !== -1
-    ) {
+    if (typeof profile === 'string' && imageServiceProfiles.indexOf(profile) !== -1) {
       return true;
     }
   }

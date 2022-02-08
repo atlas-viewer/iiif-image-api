@@ -33,6 +33,16 @@ export * from './utility/size-parameter-to-string';
 export * from './utility/sizes-match';
 export * from './utility/supports';
 export * from './utility/supports-custom-sizes';
-export * from './image-service-loader';
 export * from './profiles';
 export * from './types';
+
+import { ImageServiceLoader as ImageServiceLoader_ } from './image-service-loader';
+import fetch from 'node-fetch';
+
+export class ImageServiceLoader extends ImageServiceLoader_ {
+  async fetch(input: RequestInfo, init?: RequestInit): Promise<Response> {
+    return fetch(input as any, init as any) as any;
+  }
+}
+
+export const imageServiceLoader = new ImageServiceLoader();

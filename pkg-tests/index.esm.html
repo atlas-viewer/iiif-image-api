@@ -1,0 +1,32 @@
+<html>
+<head>
+  <meta charset='UTF-8'>
+  <meta name='viewport'
+        content='width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0'>
+  <meta http-equiv='X-UA-Compatible' content='ie=edge'>
+  <title>Document</title>
+</head>
+<body>
+<pre id="root"></pre>
+<script type="importmap">
+{
+  "imports": {
+    "@atlas-viewer/iiif-image-api": "../dist/esm/index.mjs"
+  }
+}
+</script>
+
+<script type="module">
+  import { ImageServiceLoader } from '@atlas-viewer/iiif-image-api';
+
+
+  const loader = new ImageServiceLoader();
+  loader.loadService({
+    id: 'https://iiif.wellcomecollection.org/image/b18035723_0001.JP2',
+  }).then(r => {
+    document.getElementById('root').innerText = JSON.stringify(r, null, 2);
+  })
+
+</script>
+</body>
+</html>

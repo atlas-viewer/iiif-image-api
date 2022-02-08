@@ -8,13 +8,7 @@
 // - Mark as safe - continue generating image service requests without making them
 // - Detect image errors - mark as unsafe, load each one individually (lazy if possible).
 
-import {
-  ContentResource,
-  IIIFExternalWebResource,
-  ImageProfile,
-  ImageSize,
-  ImageTile,
-} from '@hyperion-framework/types';
+import { ContentResource, IIIFExternalWebResource, ImageProfile, ImageSize, ImageTile } from '@iiif/presentation-3';
 import { Service } from './types';
 import { getImageServerFromId } from './utility/get-image-server-from-id';
 import { canonicalServiceUrl } from './utility/canonical-service-url';
@@ -105,7 +99,7 @@ export class ImageServiceLoader {
    * @param service
    * @param preLoaded Mark this as being pre-loaded (default: true)
    */
-  sample(service: Service, imageServiceRequest?: ImageServiceRequest, preLoaded: boolean = true) {
+  sample(service: Service, imageServiceRequest?: ImageServiceRequest, preLoaded = true) {
     const server = getImageServerFromId(getId(service));
     const serviceUrl = canonicalServiceUrl(getId(service));
     const existing = this.knownImageServers[server];
@@ -129,11 +123,7 @@ export class ImageServiceLoader {
         sampledProfile: service.profile,
         resourceServiceRatio: imageServiceRequest && service.height ? imageServiceRequest.height / service.height : 1,
         sampledSizes: service.sizes || [],
-        sizeRatios: extractFixedSizeScales(
-          service.width as number,
-          service.height as number,
-          service.sizes || []
-        ),
+        sizeRatios: extractFixedSizeScales(service.width as number, service.height as number, service.sizes || []),
         sampledTiles: service.tiles || [],
       },
     };
@@ -150,13 +140,11 @@ export class ImageServiceLoader {
    * @param server
    * @param forceVerify
    */
-  preLoad(server: ImageServer, forceVerify: boolean = true) {
+  preLoad(server: ImageServer, forceVerify = true) {
     this.knownImageServers[server.root] = server;
     if (forceVerify) {
       this.knownImageServers[server.root].malformed = false;
-      this.knownImageServers[
-        server.root
-      ].verifications = this.config.verificationsRequired;
+      this.knownImageServers[server.root].verifications = this.config.verificationsRequired;
     }
   }
 
@@ -169,11 +157,7 @@ export class ImageServiceLoader {
    * @param verify
    * @param force
    */
-  predict(
-    resource: ImageServiceRequest,
-    verify: boolean = false,
-    force: boolean = false
-  ): Service | null {
+  predict(resource: ImageServiceRequest, verify = false, force = false): Service | null {
     const serverId = getImageServerFromId(getId(resource));
     const imageServer = this.knownImageServers[serverId];
 
@@ -181,9 +165,7 @@ export class ImageServiceLoader {
     if (
       !imageServer ||
       !imageServer.result ||
-      (!force &&
-        (imageServer.malformed ||
-          imageServer.verifications < this.config.verificationsRequired))
+      (!force && (imageServer.malformed || imageServer.verifications < this.config.verificationsRequired))
     ) {
       return null;
     }
@@ -196,15 +178,11 @@ export class ImageServiceLoader {
         '@id': getId(resource),
         id: getId(resource),
         protocol: 'http://iiif.io/api/image',
-        tiles: sampledTilesToTiles(
-          resource.width,
-          resource.height,
-          imageServer.result.sampledTiles
-        ),
+        tiles: sampledTilesToTiles(resource.width, resource.height, imageServer.result.sampledTiles),
         sizes: fixedSizesFromScales(
           Math.floor(resource.width / imageServer.result.resourceServiceRatio),
           Math.floor(resource.height / imageServer.result.resourceServiceRatio),
-          imageServer.result.sizeRatios,
+          imageServer.result.sizeRatios
         ),
         profile: imageServer.result.sampledProfile,
         height: resource.height,
@@ -219,24 +197,15 @@ export class ImageServiceLoader {
   async getThumbnailFromResource(
     unknownResource: ContentResource,
     request: ImageCandidateRequest,
-    dereference: boolean = true,
+    dereference = true,
     otherCandidates: ImageCandidate[] = []
   ) {
-    const candidates = await this.getImageCandidates(
-      unknownResource,
-      dereference
-    );
+    const candidates = await this.getImageCandidates(unknownResource, dereference);
 
-    return pickBestFromCandidates(request, [
-      () => otherCandidates,
-      () => candidates,
-    ]);
+    return pickBestFromCandidates(request, [() => otherCandidates, () => candidates]);
   }
 
-  async getImageCandidates(
-    unknownResource: ContentResource,
-    dereference: boolean = true
-  ): Promise<ImageCandidate[]> {
+  async getImageCandidates(unknownResource: ContentResource, dereference = true): Promise<ImageCandidate[]> {
     const resource = unknownResource as IIIFExternalWebResource;
 
     if (dereference && resource.height && resource.width) {
@@ -281,10 +250,7 @@ export class ImageServiceLoader {
     if (isValid) {
       const serverId = getImageServerFromId(getId(resource));
       this.knownImageServers[serverId].verifications += 1;
-      if (
-        this.knownImageServers[serverId].verifications >=
-        this.config.verificationsRequired
-      ) {
+      if (this.knownImageServers[serverId].verifications >= this.config.verificationsRequired) {
         this.knownImageServers[serverId].verified = true;
       }
     }
@@ -299,11 +265,7 @@ export class ImageServiceLoader {
       return true;
     }
     const server = this.knownImageServers[getImageServerFromId(serviceId)];
-    return (
-      server &&
-      !server.malformed &&
-      server.verifications >= this.config.verificationsRequired
-    );
+    return server && !server.malformed && server.verifications >= this.config.verificationsRequired;
   }
 
   /**
@@ -326,16 +288,10 @@ export class ImageServiceLoader {
    * @param serviceId
    * @param forceFresh
    */
-  async fetchService(
-    serviceId: string,
-    forceFresh: boolean = false
-  ): Promise<Service & { real: boolean }> {
+  async fetchService(serviceId: string, forceFresh = false): Promise<Service & { real: boolean }> {
     const serviceUrl = canonicalServiceUrl(serviceId);
 
-    if (
-      this.imageServices[serviceUrl] &&
-      (!forceFresh || this.imageServices[serviceUrl].real)
-    ) {
+    if (this.imageServices[serviceUrl] && (!forceFresh || this.imageServices[serviceUrl].real)) {
       return this.imageServices[serviceUrl];
     }
 
@@ -343,9 +299,7 @@ export class ImageServiceLoader {
       throw new Error('Fetching is not enabled');
     }
 
-    const json = (await fetch(serviceUrl).then(service =>
-      service.json()
-    )) as Service;
+    const json = (await this.fetch(serviceUrl).then((service) => service.json())) as Service;
 
     if (!json.id && (json as any)['@id']) {
       json.id = (json as any)['@id'];
@@ -363,6 +317,10 @@ export class ImageServiceLoader {
     return this.imageServices[serviceUrl];
   }
 
+  async fetch(input: RequestInfo, init?: RequestInit): Promise<Response> {
+    return fetch(input, init);
+  }
+
   /**
    * Load an image service
    *
@@ -372,23 +330,20 @@ export class ImageServiceLoader {
    * @todo make this batched, so only the maximum required can be done at once, to allow
    *       for the prediction engine to kick in.
    */
-  async loadService(
-    resource: ImageServiceRequest,
-    forceFresh: boolean = false
-  ): Promise<Service> {
+  async loadService(resource: ImageServiceRequest, forceFresh = false): Promise<Service> {
     if (!this.config.disableThrottling) {
-      while (true) {
+      let running = true;
+      while (running) {
         if (this.fetchingCount >= this.config.verificationsRequired) {
           await new Promise((resolve) => setTimeout(resolve, 500));
         } else {
+          running = false;
           break;
         }
       }
     }
 
-    const imageServer = this.knownImageServers[
-      getImageServerFromId(getId(resource))
-    ];
+    const imageServer = this.knownImageServers[getImageServerFromId(getId(resource))];
     if (imageServer && !imageServer.malformed && !forceFresh) {
       // We have a known image server, let wait for it.
       await imageServer.result;
