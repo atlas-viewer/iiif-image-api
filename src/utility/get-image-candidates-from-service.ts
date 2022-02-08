@@ -3,9 +3,7 @@ import { ImageCandidate } from '../types';
 import { getFixedSizesFromService } from './get-fixed-sizes-from-service';
 import { getCustomSizeFromService } from './get-custom-size-from-service';
 
-export function getImageCandidatesFromService(
-  service: Service[]
-): ImageCandidate[] {
+export function getImageCandidatesFromService(service: Service[]): ImageCandidate[] {
   const candidates: ImageCandidate[] = [];
 
   const totalServices = service.length;

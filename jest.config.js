@@ -1,21 +1,5 @@
+/** @type {import('ts-jest/dist/types').InitialOptionsTsJest} */
 module.exports = {
   preset: 'ts-jest/presets/js-with-ts',
   testEnvironment: 'node',
-  coveragePathIgnorePatterns: [
-    '/node_modules/',
-    '/coverage/',
-    'dist/',
-    '(.test)\\.(ts|tsx|js)$',
-    'jest.transform.js',
-    '.json',
-  ],
-  modulePathIgnorePatterns: ['dist/', 'lib/'],
-  globals: {
-    'ts-jest': {
-      // ts-jest configuration goes here
-      tsConfig: {
-        rootDir: '.',
-      },
-    },
-  },
 };

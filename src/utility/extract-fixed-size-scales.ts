@@ -1,4 +1,4 @@
-import { ImageSize } from '@hyperion-framework/types';
+import { ImageSize } from '@iiif/presentation-3';
 
 /**
  * Extract fixed size scales
@@ -10,11 +10,7 @@ import { ImageSize } from '@hyperion-framework/types';
  * @param height
  * @param sizes
  */
-export function extractFixedSizeScales(
-  width: number,
-  height: number,
-  sizes: ImageSize[]
-): number[] {
+export function extractFixedSizeScales(width: number, height: number, sizes: ImageSize[]): number[] {
   const len = sizes.length;
   const scales = [];
   for (let i = 0; i < len; i++) {

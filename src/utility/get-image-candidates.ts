@@ -1,12 +1,5 @@
-import {
-  ContentResource,
-  IIIFExternalWebResource,
-} from '@hyperion-framework/types';
-import {
-  imageServiceLoader,
-  ImageServiceLoader,
-  ImageServiceRequest,
-} from '../image-service-loader';
+import { ContentResource, IIIFExternalWebResource } from '@iiif/presentation-3';
+import { ImageServiceLoader, ImageServiceRequest } from '../image-service-loader';
 import { ImageCandidate } from '../types';
 import { getFixedSizeFromImage } from './get-fixed-size-from-image';
 import { getImageCandidatesFromService } from './get-image-candidates-from-service';
@@ -28,7 +21,7 @@ import { getId } from './get-id';
  */
 export function getImageCandidates(
   unknownResource: ContentResource,
-  dereference: boolean = true,
+  dereference = true,
   loader: ImageServiceLoader
 ): ImageCandidate[] {
   const candidates: ImageCandidate[] = [];
@@ -62,9 +55,7 @@ export function getImageCandidates(
           if (!externalService.width) {
             externalService.width = resource.width;
           }
-          refCandidates.push(
-            ...getImageCandidatesFromService([externalService])
-          );
+          refCandidates.push(...getImageCandidatesFromService([externalService]));
         }
       }
     }

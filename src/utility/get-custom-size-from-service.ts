@@ -21,9 +21,7 @@ export function getCustomSizeFromService(service: Service): ImageCandidate[] {
   const imagesSizes: ImageCandidate[] = [];
 
   // Check for max width in profile.
-  const profiles = Array.isArray(service.profile)
-    ? service.profile
-    : [service.profile];
+  const profiles = Array.isArray(service.profile) ? service.profile : [service.profile];
 
   const pLen = profiles.length;
   for (let x = 0; x < pLen; x++) {

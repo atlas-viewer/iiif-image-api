@@ -1,10 +1,6 @@
-import { ImageTile } from '@hyperion-framework/types';
+import { ImageTile } from '@iiif/presentation-3';
 
-export function sampledTilesToTiles(
-  width: number,
-  height: number,
-  sampledTiles: ImageTile[]
-): ImageTile[] {
+export function sampledTilesToTiles(width: number, height: number, sampledTiles: ImageTile[]): ImageTile[] {
   const maxDim = width > height ? width : height;
   const len = sampledTiles.length;
   const newTiles: ImageTile[] = [];

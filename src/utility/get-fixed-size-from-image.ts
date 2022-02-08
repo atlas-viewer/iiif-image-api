@@ -1,7 +1,4 @@
-import {
-  ContentResource,
-  IIIFExternalWebResource,
-} from '@hyperion-framework/types';
+import { ContentResource, IIIFExternalWebResource } from '@iiif/presentation-3';
 import { ImageCandidate } from '../types';
 import { inferSizeFromUrl } from './infer-size-from-url';
 import { getType } from './get-type';
@@ -18,9 +15,7 @@ import { getId } from './get-id';
  *
  * @param contentResource
  */
-export function getFixedSizeFromImage(
-  contentResource: ContentResource | string
-): ImageCandidate | null {
+export function getFixedSizeFromImage(contentResource: ContentResource | string): ImageCandidate | null {
   if (typeof contentResource === 'string') {
     // Might not even be an image.
     return inferSizeFromUrl(contentResource);

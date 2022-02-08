@@ -8,9 +8,7 @@ import { getId } from './get-id';
  *
  * @param service
  */
-export function getSmallestScaleFactorAsSingleImage(
-  service: Service
-): FixedSizeImageService | null {
+export function getSmallestScaleFactorAsSingleImage(service: Service): FixedSizeImageService | null {
   if (!service.width || !service.height) {
     return null;
   }
@@ -32,10 +30,7 @@ export function getSmallestScaleFactorAsSingleImage(
       const sortedScales = tile.scaleFactors.sort();
       for (let j = 0; j < sizeLen; j++) {
         const size = sortedScales[j];
-        if (
-          service.width / size <= targetSize &&
-          service.height / size <= targetSize
-        ) {
+        if (service.width / size <= targetSize && service.height / size <= targetSize) {
           return {
             id: getId(service),
             type: 'fixed-service',
