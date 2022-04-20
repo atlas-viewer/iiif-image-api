@@ -8,7 +8,14 @@
 // - Mark as safe - continue generating image service requests without making them
 // - Detect image errors - mark as unsafe, load each one individually (lazy if possible).
 
-import { ContentResource, IIIFExternalWebResource, ImageProfile, ImageSize, ImageTile } from '@iiif/presentation-3';
+import {
+  ContentResource,
+  IIIFExternalWebResource,
+  ImageProfile,
+  ImageSize,
+  ImageTile,
+  ImageService,
+} from '@iiif/presentation-3';
 import { Service } from './types';
 import { getImageServerFromId } from './utility/get-image-server-from-id';
 import { canonicalServiceUrl } from './utility/canonical-service-url';
@@ -122,10 +129,7 @@ export class ImageServiceLoader {
       result: {
         context: service['@context'] || [],
         sampledProfile: service.profile,
-        resourceServiceRatio:
-          imageServiceRequest && service.height
-            ? imageServiceRequest.height / service.height
-            : 1,
+        resourceServiceRatio: imageServiceRequest && service.height ? imageServiceRequest.height / service.height : 1,
         sampledSizes: service.sizes || [],
         sizeRatios: extractFixedSizeScales(service.width as number, service.height as number, service.sizes || []),
         sampledTiles: service.tiles || [],
@@ -183,22 +187,12 @@ export class ImageServiceLoader {
         '@id': getId(resource),
         id: getId(resource),
         protocol: 'http://iiif.io/api/image',
-        tiles:
-          source?.tiles ||
-          sampledTilesToTiles(
-            resource.width,
-            resource.height,
-            imageServer.result.sampledTiles
-          ),
+        tiles: source?.tiles || sampledTilesToTiles(resource.width, resource.height, imageServer.result.sampledTiles),
         sizes:
           source?.sizes ||
           fixedSizesFromScales(
-            Math.round(
-              resource.width / imageServer.result.resourceServiceRatio
-            ),
-            Math.round(
-              resource.height / imageServer.result.resourceServiceRatio
-            ),
+            Math.round(resource.width / imageServer.result.resourceServiceRatio),
+            Math.round(resource.height / imageServer.result.resourceServiceRatio),
             imageServer.result.sizeRatios
           ),
         profile: source?.profile || imageServer.result.sampledProfile,
