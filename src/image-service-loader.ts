@@ -8,7 +8,14 @@
 // - Mark as safe - continue generating image service requests without making them
 // - Detect image errors - mark as unsafe, load each one individually (lazy if possible).
 
-import { ContentResource, IIIFExternalWebResource, ImageProfile, ImageSize, ImageTile } from '@iiif/presentation-3';
+import {
+  ContentResource,
+  IIIFExternalWebResource,
+  ImageProfile,
+  ImageSize,
+  ImageTile,
+  ImageService,
+} from '@iiif/presentation-3';
 import { Service } from './types';
 import { getImageServerFromId } from './utility/get-image-server-from-id';
 import { canonicalServiceUrl } from './utility/canonical-service-url';
@@ -44,6 +51,7 @@ export type ImageServiceRequest = {
   id: string;
   width: number;
   height: number;
+  source?: ImageService;
 };
 
 type LoadedImageService = Service & {
@@ -158,6 +166,7 @@ export class ImageServiceLoader {
    * @param force
    */
   predict(resource: ImageServiceRequest, verify = false, force = false): Service | null {
+    const source = resource?.source;
     const serverId = getImageServerFromId(getId(resource));
     const imageServer = this.knownImageServers[serverId];
 
@@ -178,15 +187,17 @@ export class ImageServiceLoader {
         '@id': getId(resource),
         id: getId(resource),
         protocol: 'http://iiif.io/api/image',
-        tiles: sampledTilesToTiles(resource.width, resource.height, imageServer.result.sampledTiles),
-        sizes: fixedSizesFromScales(
-          Math.floor(resource.width / imageServer.result.resourceServiceRatio),
-          Math.floor(resource.height / imageServer.result.resourceServiceRatio),
-          imageServer.result.sizeRatios
-        ),
-        profile: imageServer.result.sampledProfile,
-        height: resource.height,
-        width: resource.width,
+        tiles: source?.tiles || sampledTilesToTiles(resource.width, resource.height, imageServer.result.sampledTiles),
+        sizes:
+          source?.sizes ||
+          fixedSizesFromScales(
+            Math.round(resource.width / imageServer.result.resourceServiceRatio),
+            Math.round(resource.height / imageServer.result.resourceServiceRatio),
+            imageServer.result.sizeRatios
+          ),
+        profile: source?.profile || imageServer.result.sampledProfile,
+        height: source?.height || resource.height,
+        width: source?.width || resource.width,
         real: false,
       } as any;
     }
@@ -215,6 +226,7 @@ export class ImageServiceLoader {
           id: getId(service),
           width: service.width ? service.width : resource.width,
           height: service.height ? service.height : resource.height,
+          source: service,
         };
         await this.loadService(request);
       }
