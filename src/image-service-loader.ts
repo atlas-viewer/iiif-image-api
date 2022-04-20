@@ -44,6 +44,7 @@ export type ImageServiceRequest = {
   id: string;
   width: number;
   height: number;
+  source?: ImageService;
 };
 
 type LoadedImageService = Service & {
@@ -121,7 +122,10 @@ export class ImageServiceLoader {
       result: {
         context: service['@context'] || [],
         sampledProfile: service.profile,
-        resourceServiceRatio: imageServiceRequest && service.height ? imageServiceRequest.height / service.height : 1,
+        resourceServiceRatio:
+          imageServiceRequest && service.height
+            ? imageServiceRequest.height / service.height
+            : 1,
         sampledSizes: service.sizes || [],
         sizeRatios: extractFixedSizeScales(service.width as number, service.height as number, service.sizes || []),
         sampledTiles: service.tiles || [],
@@ -158,6 +162,7 @@ export class ImageServiceLoader {
    * @param force
    */
   predict(resource: ImageServiceRequest, verify = false, force = false): Service | null {
+    const source = resource?.source;
     const serverId = getImageServerFromId(getId(resource));
     const imageServer = this.knownImageServers[serverId];
 
@@ -178,15 +183,27 @@ export class ImageServiceLoader {
         '@id': getId(resource),
         id: getId(resource),
         protocol: 'http://iiif.io/api/image',
-        tiles: sampledTilesToTiles(resource.width, resource.height, imageServer.result.sampledTiles),
-        sizes: fixedSizesFromScales(
-          Math.floor(resource.width / imageServer.result.resourceServiceRatio),
-          Math.floor(resource.height / imageServer.result.resourceServiceRatio),
-          imageServer.result.sizeRatios
-        ),
-        profile: imageServer.result.sampledProfile,
-        height: resource.height,
-        width: resource.width,
+        tiles:
+          source?.tiles ||
+          sampledTilesToTiles(
+            resource.width,
+            resource.height,
+            imageServer.result.sampledTiles
+          ),
+        sizes:
+          source?.sizes ||
+          fixedSizesFromScales(
+            Math.round(
+              resource.width / imageServer.result.resourceServiceRatio
+            ),
+            Math.round(
+              resource.height / imageServer.result.resourceServiceRatio
+            ),
+            imageServer.result.sizeRatios
+          ),
+        profile: source?.profile || imageServer.result.sampledProfile,
+        height: source?.height || resource.height,
+        width: source?.width || resource.width,
         real: false,
       } as any;
     }
@@ -215,6 +232,7 @@ export class ImageServiceLoader {
           id: getId(service),
           width: service.width ? service.width : resource.width,
           height: service.height ? service.height : resource.height,
+          source: service,
         };
         await this.loadService(request);
       }
