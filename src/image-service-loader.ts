@@ -114,7 +114,7 @@ export class ImageServiceLoader {
 
     this.imageServices[serviceUrl] = Object.assign(service, { real: true });
 
-    if (!existing && service.tiles && service.sizes) {
+    if (!existing && service.tiles) {
       // Add new prediction.
       this.knownImageServers[server] = {
         verifications: 0,
