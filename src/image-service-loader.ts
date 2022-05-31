@@ -113,30 +113,30 @@ export class ImageServiceLoader {
     const existing = this.knownImageServers[server];
 
     this.imageServices[serviceUrl] = Object.assign(service, { real: true });
-    if (existing) {
-      return this.verify(service as ImageServiceRequest);
+
+    if (!existing && service.tiles && service.sizes) {
+      // Add new prediction.
+      this.knownImageServers[server] = {
+        verifications: 0,
+        malformed: false,
+        root: server,
+        preLoaded,
+        sampledId: getId(service),
+        verified: false,
+        server: null,
+        result: {
+          context: service['@context'] || [],
+          sampledProfile: service.profile,
+          resourceServiceRatio: imageServiceRequest && service.height ? imageServiceRequest.height / service.height : 1,
+          sampledSizes: service.sizes || [],
+          sizeRatios: extractFixedSizeScales(service.width as number, service.height as number, service.sizes || []),
+          sampledTiles: service.tiles || [],
+        },
+      };
+      return true;
     }
 
-    // Add new prediction.
-    this.knownImageServers[server] = {
-      verifications: 0,
-      malformed: false,
-      root: server,
-      preLoaded,
-      sampledId: getId(service),
-      verified: false,
-      server: null,
-      result: {
-        context: service['@context'] || [],
-        sampledProfile: service.profile,
-        resourceServiceRatio: imageServiceRequest && service.height ? imageServiceRequest.height / service.height : 1,
-        sampledSizes: service.sizes || [],
-        sizeRatios: extractFixedSizeScales(service.width as number, service.height as number, service.sizes || []),
-        sampledTiles: service.tiles || [],
-      },
-    };
-
-    return true;
+    return this.verify(service as ImageServiceRequest);
   }
 
   /**
