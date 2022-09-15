@@ -48,7 +48,7 @@
     "access": "public"
   },
   "dependencies": {
-    "node-fetch": "^3.2.0",
+    "node-fetch": "^3.2.10",
     "@iiif/presentation-3": "*"
   }
 }
