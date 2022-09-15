@@ -17,7 +17,6 @@ import {
   ImageService,
 } from '@iiif/presentation-3';
 import { Service } from './types';
-import { getImageServerFromId } from './utility/get-image-server-from-id';
 import { canonicalServiceUrl } from './utility/canonical-service-url';
 import { fixedSizesFromScales } from './utility/fixed-sizes-from-scales';
 import { sampledTilesToTiles } from './utility/sampled-tiles-to-tiles';
@@ -28,6 +27,9 @@ import { getImageServices } from './utility/get-image-services';
 import { getImageCandidates } from './utility/get-image-candidates';
 import { pickBestFromCandidates } from './utility/pick-from-best-candidates';
 import { getId } from './utility/get-id';
+import { getImageServerFromId } from './utility/get-image-server-from-id';
+import { level0 } from './profiles';
+import { isLevel0 } from './utility/is-level-0';
 
 export type ImageServer = {
   root: string;
@@ -114,7 +116,7 @@ export class ImageServiceLoader {
 
     this.imageServices[serviceUrl] = Object.assign(service, { real: true });
 
-    if (!existing && service.tiles) {
+    if (!existing && service.tiles && !isLevel0(service)) {
       // Add new prediction.
       this.knownImageServers[server] = {
         verifications: 0,
@@ -174,7 +176,8 @@ export class ImageServiceLoader {
     if (
       !imageServer ||
       !imageServer.result ||
-      (!force && (imageServer.malformed || imageServer.verifications < this.config.verificationsRequired))
+      (!force && (imageServer.malformed || imageServer.verifications < this.config.verificationsRequired)) ||
+      isLevel0(resource.source)
     ) {
       return null;
     }

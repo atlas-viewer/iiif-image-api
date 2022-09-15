@@ -379,4 +379,118 @@ describe('image service loader', () => {
       ],
     };
   });
+
+  describe('getty quire example (level0)', () => {
+    const infoA = {
+      '@context': 'http://iiif.io/api/image/2/context.json',
+      '@id': 'http:/localhost:8080/mother/tiles',
+      profile: [
+        'http://iiif.io/api/image/2/level0.json',
+        {
+          formats: ['jpg'],
+          qualities: ['default'],
+        },
+      ],
+      protocol: 'http://iiif.io/api/image',
+      tiles: [
+        {
+          scaleFactors: [1, 2, 4, 8],
+          width: 256,
+        },
+      ],
+      width: 2345,
+      height: 3000,
+    };
+
+    const infoB = {
+      '@context': 'http://iiif.io/api/image/2/context.json',
+      '@id': 'http:/localhost:8080/evans-legionnaire/tiles',
+      profile: [
+        'http://iiif.io/api/image/2/level0.json',
+        {
+          formats: ['jpg'],
+          qualities: ['default'],
+        },
+      ],
+      protocol: 'http://iiif.io/api/image',
+      tiles: [
+        {
+          scaleFactors: [1, 2],
+          width: 256,
+        },
+      ],
+      width: 1024,
+      height: 680,
+    };
+
+    const infoC = {
+      '@context': 'http://iiif.io/api/image/2/context.json',
+      '@id': 'http:/localhost:8080/evans/tiles',
+      profile: [
+        'http://iiif.io/api/image/2/level0.json',
+        {
+          formats: ['jpg'],
+          qualities: ['default'],
+        },
+      ],
+      protocol: 'http://iiif.io/api/image',
+      tiles: [
+        {
+          scaleFactors: [1, 2],
+          width: 256,
+        },
+      ],
+      width: 600,
+      height: 413,
+    };
+
+    test('A -> B -> C', async () => {
+      const loader = new ImageServiceLoader();
+      loader.setConfig({ enableFetching: false });
+
+      await loader.sample(infoA as any);
+      await loader.sample(infoB as any);
+      // await loader.sample();
+
+      const prediection = loader.predict({
+        id: infoC['@id'],
+        width: infoC.width as number,
+        height: infoC.height as number,
+      }) as Service;
+
+      expect(prediection).toEqual(null);
+    });
+    test('C -> B -> A', async () => {
+      const loader = new ImageServiceLoader();
+      loader.setConfig({ enableFetching: false });
+
+      await loader.sample(infoC as any);
+      await loader.sample(infoB as any);
+      // await loader.sample();
+
+      const prediection = loader.predict({
+        id: infoA['@id'],
+        width: infoA.width as number,
+        height: infoA.height as number,
+      }) as Service;
+
+      expect(prediection).toEqual(null);
+    });
+    test('A -> C -> B', async () => {
+      const loader = new ImageServiceLoader();
+      loader.setConfig({ enableFetching: false });
+
+      await loader.sample(infoA as any);
+      await loader.sample(infoC as any);
+      // await loader.sample();
+
+      const prediection = loader.predict({
+        id: infoB['@id'],
+        width: infoB.width as number,
+        height: infoB.height as number,
+      }) as Service;
+
+      expect(prediection).toEqual(null);
+    });
+  });
 });

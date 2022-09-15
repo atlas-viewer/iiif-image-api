@@ -10,7 +10,7 @@ export * from './utility/get-id';
 export * from './utility/get-image-candidates';
 export * from './utility/get-image-candidates-from-service';
 export * from './utility/get-image-from-tile-source';
-export * from './utility/get-image-server-from-id';
+export * from '../../../iiif-commons/parser/src/image-3/parser/get-image-server-from-id';
 export * from './utility/get-image-services';
 export * from './utility/get-smallest-scale-factor-as-single-image';
 export * from './utility/get-type';
