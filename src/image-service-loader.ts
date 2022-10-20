@@ -176,6 +176,8 @@ export class ImageServiceLoader {
     if (
       !imageServer ||
       !imageServer.result ||
+      !(source?.height || resource.height) ||
+      !(source?.width || resource.width) ||
       (!force && (imageServer.malformed || imageServer.verifications < this.config.verificationsRequired)) ||
       isLevel0(resource.source)
     ) {
