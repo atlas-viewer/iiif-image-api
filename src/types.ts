@@ -18,6 +18,7 @@ export type FixedSizeImageService = {
   type: 'fixed-service';
   width: number;
   height: number;
+  level?: number | null;
 };
 
 export type VariableSizeImage = {
@@ -27,6 +28,7 @@ export type VariableSizeImage = {
   maxWidth: number;
   minHeight: number;
   maxHeight: number;
+  level?: number | null;
 };
 
 export type UnknownSizeImage = {

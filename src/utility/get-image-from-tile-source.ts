@@ -9,9 +9,10 @@ export function getImageFromTileSource(
   targetWidth: number,
   targetHeight?: number
 ): FixedSizeImage {
+  // @todo this needs to determine levels 0, 1 + 2.
   const req = createImageServiceRequest({
     id: canonicalServiceUrl(getId(image)),
-    profile: 'level2',
+    profile: image.level === null || typeof image.level === 'undefined' ? 'level0' : `level${image.level}}`,
     type: 'ImageService2',
   });
 

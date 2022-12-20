@@ -1,6 +1,7 @@
 import { Service } from '../types';
 import { FixedSizeImageService } from '../types';
 import { getId } from './get-id';
+import { getLevelFromService } from './get-level-from-service';
 
 /**
  * Returns a fixed size image using the tile using the largest available size,
@@ -36,6 +37,7 @@ export function getSmallestScaleFactorAsSingleImage(service: Service): FixedSize
             type: 'fixed-service',
             width: (service.width / size) | 0,
             height: (service.height / size) | 0,
+            level: getLevelFromService(service),
           };
         }
       }

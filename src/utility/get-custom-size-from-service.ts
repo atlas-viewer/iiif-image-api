@@ -1,6 +1,7 @@
 import { ImageCandidate, Service } from '../types';
 import { supportsCustomSizes } from './supports-custom-sizes';
 import { getId } from './get-id';
+import { getLevelFromService } from './get-level-from-service';
 
 /**
  * Get custom size from service
@@ -36,6 +37,7 @@ export function getCustomSizeFromService(service: Service): ImageCandidate[] {
             minHeight: 0,
             maxHeight: (profile.maxHeight || profile.maxWidth) as number,
             maxWidth: (profile.maxWidth || profile.maxHeight) as number,
+            level: getLevelFromService(service),
           },
         ];
       }
@@ -54,6 +56,7 @@ export function getCustomSizeFromService(service: Service): ImageCandidate[] {
           minWidth: 0,
           maxHeight: tile.height || tile.width,
           maxWidth: tile.width,
+          level: getLevelFromService(service),
         });
       }
     }

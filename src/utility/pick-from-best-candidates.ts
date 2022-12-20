@@ -35,8 +35,8 @@ export function pickBestFromCandidates(
     },
     inputRequest
   );
-  const explain = (text: () => string, indent: number = 0) =>
-    process.env.NODE_ENV !== 'production' && request.explain
+  const explain = (text: () => string, indent = 0) =>
+    request.explain
       ? log.push(
           new Array(indent)
             .fill(0)
@@ -126,6 +126,7 @@ export function pickBestFromCandidates(
               type: 'fixed-service',
               width: candidate.maxWidth,
               height: candidate.maxWidth,
+              level: null,
             },
             candidate.maxWidth
           );
