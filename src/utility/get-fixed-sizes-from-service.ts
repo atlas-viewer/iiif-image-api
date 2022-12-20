@@ -2,6 +2,7 @@ import { Service } from '@iiif/presentation-3';
 import { FixedSizeImageService } from '../types';
 import { isImageService } from './is-image-service';
 import { getId } from './get-id';
+import { getLevelFromService } from './get-level-from-service';
 
 /**
  * Get fixed sizes from service.
@@ -21,6 +22,7 @@ export function getFixedSizesFromService(service: Service): FixedSizeImageServic
       type: 'fixed-service',
       height: size.height,
       width: size.width,
+      level: getLevelFromService(service),
     };
   });
 }
