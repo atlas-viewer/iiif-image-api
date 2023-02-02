@@ -3,6 +3,7 @@ import { FixedSizeImageService } from '../types';
 import { isImageService } from './is-image-service';
 import { getId } from './get-id';
 import { getLevelFromService } from './get-level-from-service';
+import { isImage3 } from './is-image-3';
 
 /**
  * Get fixed sizes from service.
@@ -23,6 +24,7 @@ export function getFixedSizesFromService(service: Service): FixedSizeImageServic
       height: size.height,
       width: size.width,
       level: getLevelFromService(service),
+      version: isImage3(service) ? 3 : 2,
     };
   });
 }

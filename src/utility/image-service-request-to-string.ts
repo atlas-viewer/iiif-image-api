@@ -16,7 +16,8 @@ export function imageServiceRequestToString(req: ImageServiceImageRequest, servi
     return `${baseUrl}/info.json`;
   }
 
-  let { region, size, rotation, format, quality } = req;
+  let { size } = req;
+  const { region, rotation, format, quality } = req;
 
   if (service) {
     // Service specific changes.
@@ -45,6 +46,8 @@ export function imageServiceRequestToString(req: ImageServiceImageRequest, servi
       if (!size.max && size.width && size.height) {
         size = { ...size, height: undefined };
       }
+
+      size = { ...size, version: 2 };
     }
     if (is3) {
       if (size.max && size.serialiseAsFull) {
@@ -56,6 +59,8 @@ export function imageServiceRequestToString(req: ImageServiceImageRequest, servi
         const ratio = service.height / service.width;
         size = { ...size, height: Math.ceil(size.width * ratio) };
       }
+
+      size = { ...size, version: 3 };
     }
 
     // @todo FUTURE - possibly passing in a correct=true option

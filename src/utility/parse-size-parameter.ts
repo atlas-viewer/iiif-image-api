@@ -36,6 +36,9 @@ export function parseSizeParameter(pathPart: string): SizeParameter {
 
     if (wh[1] !== '') {
       size.height = parseInt(wh[1], 10);
+      size.version = 2;
+    } else {
+      size.version = 3;
     }
   }
 

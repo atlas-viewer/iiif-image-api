@@ -2,6 +2,7 @@ import { ImageCandidate, Service } from '../types';
 import { supportsCustomSizes } from './supports-custom-sizes';
 import { getId } from './get-id';
 import { getLevelFromService } from './get-level-from-service';
+import { isImage3 } from './is-image-3';
 
 /**
  * Get custom size from service
@@ -38,6 +39,7 @@ export function getCustomSizeFromService(service: Service): ImageCandidate[] {
             maxHeight: (profile.maxHeight || profile.maxWidth) as number,
             maxWidth: (profile.maxWidth || profile.maxHeight) as number,
             level: getLevelFromService(service),
+            version: service['@context'] === 'http://iiif.io/api/image/3/context.json' ? 3 : 2,
           },
         ];
       }
@@ -57,6 +59,7 @@ export function getCustomSizeFromService(service: Service): ImageCandidate[] {
           maxHeight: tile.height || tile.width,
           maxWidth: tile.width,
           level: getLevelFromService(service),
+          version: isImage3(service) ? 3 : 2,
         });
       }
     }

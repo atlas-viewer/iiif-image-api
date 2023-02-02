@@ -173,6 +173,7 @@ describe('image utilities', () => {
           level: 2,
           id: 'http://example.org/service1.json',
           type: 'fixed-service',
+          version: 2,
           width: 1024,
         },
       ]);
@@ -193,6 +194,7 @@ describe('image utilities', () => {
           height: 2048,
           id: 'http://example.org/service1.json',
           type: 'fixed-service',
+          version: 2,
           level: 2,
           width: 1024,
         },
@@ -200,6 +202,7 @@ describe('image utilities', () => {
           height: 1024,
           id: 'http://example.org/service1.json',
           type: 'fixed-service',
+          version: 2,
           level: 2,
           width: 512,
         },
@@ -380,6 +383,7 @@ describe('image utilities', () => {
           minHeight: 0,
           minWidth: 0,
           type: 'variable',
+          version: 2,
           level: 1,
         },
       ]);
@@ -400,6 +404,7 @@ describe('image utilities', () => {
           minHeight: 0,
           minWidth: 0,
           type: 'variable',
+          version: 2,
           level: 1,
         },
       ]);
@@ -420,6 +425,7 @@ describe('image utilities', () => {
           minHeight: 0,
           minWidth: 0,
           type: 'variable',
+          version: 2,
           level: 1,
         },
       ]);
@@ -459,6 +465,7 @@ describe('image utilities', () => {
           minHeight: 0,
           minWidth: 0,
           type: 'variable',
+          version: 2,
           level: 1,
         },
       ]);
@@ -479,6 +486,7 @@ describe('image utilities', () => {
           minHeight: 0,
           minWidth: 0,
           type: 'variable',
+          version: 2,
           level: 1,
         },
       ]);
@@ -499,6 +507,7 @@ describe('image utilities', () => {
           minHeight: 0,
           minWidth: 0,
           type: 'variable',
+          version: 2,
           level: 1,
         },
       ]);
@@ -519,6 +528,7 @@ describe('image utilities', () => {
           minHeight: 0,
           minWidth: 0,
           type: 'variable',
+          version: 2,
           level: 1,
         },
       ]);
@@ -576,6 +586,7 @@ describe('image utilities', () => {
         height: 128,
         id: 'http://example.org/service/1',
         type: 'fixed-service',
+        version: 2,
         width: 256,
         level: 1,
       });
@@ -609,6 +620,7 @@ describe('image utilities', () => {
         height: 256,
         id: 'http://example.org/service/1',
         type: 'fixed-service',
+        version: 2,
         width: 512,
         level: 1,
       });
@@ -725,6 +737,7 @@ describe('image utilities', () => {
           height: 400,
           id: 'http://example.org/image/service',
           type: 'fixed-service',
+          version: 2,
           level: 0,
           width: 600,
         },
@@ -732,6 +745,7 @@ describe('image utilities', () => {
           height: 200,
           id: 'http://example.org/image/service',
           type: 'fixed-service',
+          version: 2,
           level: 0,
           width: 300,
         },
@@ -773,6 +787,7 @@ describe('image utilities', () => {
           minHeight: 0,
           minWidth: 0,
           type: 'variable',
+          version: 2,
           level: 0,
         },
       ]);
@@ -813,6 +828,7 @@ describe('image utilities', () => {
           minHeight: 0,
           minWidth: 0,
           type: 'variable',
+          version: 2,
           level: 1,
         },
       ]);
@@ -880,6 +896,7 @@ describe('image utilities', () => {
           height: 100,
           id: 'https://dlcs.io/thumbs/wellcome/1/f327de6b-06ef-47ec-b98f-ee79c1685393',
           type: 'fixed-service',
+          version: 2,
           width: 72,
           level: 0,
         },
@@ -887,6 +904,7 @@ describe('image utilities', () => {
           height: 200,
           id: 'https://dlcs.io/thumbs/wellcome/1/f327de6b-06ef-47ec-b98f-ee79c1685393',
           type: 'fixed-service',
+          version: 2,
           width: 143,
           level: 0,
         },
@@ -894,6 +912,7 @@ describe('image utilities', () => {
           height: 400,
           id: 'https://dlcs.io/thumbs/wellcome/1/f327de6b-06ef-47ec-b98f-ee79c1685393',
           type: 'fixed-service',
+          version: 2,
           width: 286,
           level: 0,
         },
@@ -901,6 +920,7 @@ describe('image utilities', () => {
           height: 1024,
           id: 'https://dlcs.io/thumbs/wellcome/1/f327de6b-06ef-47ec-b98f-ee79c1685393',
           type: 'fixed-service',
+          version: 2,
           width: 732,
           level: 0,
         },
@@ -1043,6 +1063,7 @@ describe('image utilities', () => {
           minHeight: 0,
           minWidth: 0,
           type: 'variable',
+          version: 2,
         },
       ]);
     });
@@ -1178,6 +1199,7 @@ describe('image utilities', () => {
               {
                 id: 'http://service.com/path/info.json',
                 type: 'fixed-service',
+                version: 2,
                 width: 256,
                 height: 256,
                 level: 0,
@@ -1188,7 +1210,7 @@ describe('image utilities', () => {
       ).toEqual({
         best: {
           height: 256,
-          id: 'http://service.com/path/full/256,256/0/default.jpg',
+          id: 'http://service.com/path/full/256,/0/default.jpg',
           type: 'fixed',
           unsafe: false,
           width: 256,
@@ -1214,6 +1236,7 @@ describe('image utilities', () => {
               {
                 id: 'http://service.com/path/info.json',
                 type: 'fixed-service',
+                version: 3,
                 width: 256,
                 height: 256,
                 level: 2,

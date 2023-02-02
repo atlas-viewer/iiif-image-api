@@ -11,9 +11,11 @@ export function getImageFromTileSource(
 ): FixedSizeImage {
   // @todo this needs to determine levels 0, 1 + 2.
   const req = createImageServiceRequest({
+    '@context':
+      image.version === 3 ? 'http://iiif.io/api/image/3/context.json' : 'http://iiif.io/api/image/2/context.json',
     id: canonicalServiceUrl(getId(image)),
     profile: image.level === null || typeof image.level === 'undefined' ? 'level0' : `level${image.level}}`,
-    type: 'ImageService2',
+    type: image.version === 3 ? 'ImageService3' : 'ImageService2',
   });
 
   if (req.type !== 'image') {

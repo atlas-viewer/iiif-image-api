@@ -211,12 +211,12 @@ export class ImageServiceLoader {
   }
 
   async getThumbnailFromResource(
-    unknownResource: ContentResource,
+    unknownResource: ContentResource | undefined,
     request: ImageCandidateRequest,
     dereference = true,
     otherCandidates: ImageCandidate[] = []
   ) {
-    const candidates = await this.getImageCandidates(unknownResource, dereference);
+    const candidates = unknownResource ? await this.getImageCandidates(unknownResource, dereference) : [];
 
     return pickBestFromCandidates(request, [() => otherCandidates, () => candidates]);
   }

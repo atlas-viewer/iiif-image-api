@@ -19,6 +19,7 @@ export type FixedSizeImageService = {
   width: number;
   height: number;
   level?: number | null;
+  version?: number;
 };
 
 export type VariableSizeImage = {
@@ -29,6 +30,7 @@ export type VariableSizeImage = {
   minHeight: number;
   maxHeight: number;
   level?: number | null;
+  version?: number;
 };
 
 export type UnknownSizeImage = {
@@ -70,6 +72,7 @@ export type SizeParameter = {
   upscaled: boolean;
   confined: boolean;
   percentScale?: number;
+  version?: 2 | 3;
 };
 
 /**

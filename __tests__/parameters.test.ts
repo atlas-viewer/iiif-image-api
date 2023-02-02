@@ -207,7 +207,7 @@ describe('IIIF Image API Parameters', () => {
         }
       `);
       expect(imageServiceRequestToString(parsed)).toEqual(
-        'https://framemark.vam.ac.uk/collections/2006AN7529/full/600,400/0/default.jpg'
+        'https://framemark.vam.ac.uk/collections/2006AN7529/full/600,/0/default.jpg'
       );
     });
     test('Request a 100 by 100 (retaining aspect ratio) thumbnail', () => {

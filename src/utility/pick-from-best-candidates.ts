@@ -1,6 +1,7 @@
 import { FixedSizeImage, ImageCandidate, ImageCandidateRequest, UnknownSizeImage, VariableSizeImage } from '../types';
 import { isBestMatch } from './is-best-match';
 import { getImageFromTileSource } from './get-image-from-tile-source';
+import { isImage3 } from './is-image-3';
 
 /**
  * Pick best from candidates
@@ -126,7 +127,8 @@ export function pickBestFromCandidates(
               type: 'fixed-service',
               width: candidate.maxWidth,
               height: candidate.maxWidth,
-              level: null,
+              level: candidate.level,
+              version: candidate.version,
             },
             candidate.maxWidth
           );
