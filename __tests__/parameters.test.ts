@@ -201,6 +201,7 @@ describe('IIIF Image API Parameters', () => {
             "height": 400,
             "max": false,
             "upscaled": false,
+            "version": 2,
             "width": 600,
           },
           "type": "image",
@@ -234,13 +235,14 @@ describe('IIIF Image API Parameters', () => {
             "height": 100,
             "max": false,
             "upscaled": false,
+            "version": 2,
             "width": 100,
           },
           "type": "image",
         }
       `);
       expect(imageServiceRequestToString(parsed)).toEqual(
-        'https://framemark.vam.ac.uk/collections/2016JL5779/full/!100,100/0/default.jpg'
+        'https://framemark.vam.ac.uk/collections/2016JL5779/full/!100,/0/default.jpg'
       );
     });
     test('Request a greyscale version', () => {
