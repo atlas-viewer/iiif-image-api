@@ -37,7 +37,7 @@ export function getImageCandidates(
   candidates.push(fixedSizeFromImage);
 
   // We will try to dereference if available (cache or prediction).
-  if (dereference && resource.width && resource.height) {
+  if (dereference && resource && resource.width && resource.height) {
     const refCandidates = [];
     const imageServices = getImageServices(resource);
     for (const service of imageServices) {

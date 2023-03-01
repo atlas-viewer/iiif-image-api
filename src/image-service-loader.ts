@@ -223,8 +223,7 @@ export class ImageServiceLoader {
 
   async getImageCandidates(unknownResource: ContentResource, dereference = true): Promise<ImageCandidate[]> {
     const resource = unknownResource as IIIFExternalWebResource;
-
-    if (dereference && resource.height && resource.width) {
+    if (dereference && resource && resource.height && resource.width) {
       const imageServices = getImageServices(resource);
       for (const service of imageServices) {
         const request: ImageServiceRequest = {
