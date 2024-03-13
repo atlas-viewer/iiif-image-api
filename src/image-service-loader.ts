@@ -172,6 +172,16 @@ export class ImageServiceLoader {
     const serverId = getImageServerFromId(getId(resource));
     const imageServer = this.knownImageServers[serverId];
 
+    // console.log({
+    //   '!imageServer': !imageServer,
+    //   '!imageServer.result': !imageServer?.result,
+    //   '!(source?.height || resource.height)': !(source?.height || resource.height),
+    //   '!(source?.width || resource.width)': !(source?.width || resource.width),
+    //   '(!force && (imageServer.malformed || imageServer.verifications < this.config.verificationsRequired))':
+    //     !force && (imageServer.malformed || imageServer.verifications < this.config.verificationsRequired),
+    //   'isLevel0(resource.source)': isLevel0(resource.source),
+    // });
+
     // No known image server.
     if (
       !imageServer ||
@@ -181,12 +191,18 @@ export class ImageServiceLoader {
       (!force && (imageServer.malformed || imageServer.verifications < this.config.verificationsRequired)) ||
       isLevel0(resource.source)
     ) {
+      console.log('WAS NULL HIT');
       return null;
     }
 
     const serviceUrl = canonicalServiceUrl(getId(resource));
 
+    // console.log('serviceUrl', serviceUrl);
+    // console.log('this.imageServices[serviceUrl]', this.imageServices[serviceUrl]);
+
     if (!this.imageServices[serviceUrl]) {
+      console.log('TRYING TO GENERATE IMAGE SERVICE');
+
       this.imageServices[serviceUrl] = {
         '@context': imageServer.result.context,
         '@id': getId(resource),

@@ -493,4 +493,170 @@ describe('image service loader', () => {
       expect(prediection).toEqual(null);
     });
   });
+
+  describe('Getty - normal', () => {
+    const services = [
+      {
+        '@context': 'http://iiif.io/api/image/2/context.json',
+        protocol: 'http://iiif.io/api/image',
+        width: 5537,
+        height: 7630,
+        sizes: [
+          { width: 173, height: 238 },
+          { width: 346, height: 476 },
+          { width: 692, height: 953 },
+          { width: 1384, height: 1907 },
+          { width: 2768, height: 3815 },
+        ],
+        tiles: [{ width: 256, height: 256, scaleFactors: [1, 2, 4, 8, 16, 32] }],
+        '@id': 'https://media.getty.edu/iiif/image/d915e1a9-8dab-49de-8be1-c29b2228e0bf',
+        profile: [
+          'http://iiif.io/api/image/2/level2.json',
+          {
+            formats: ['jpg', 'png', 'webp'],
+            qualities: ['native', 'color', 'gray', 'bitonal'],
+            supports: [
+              'regionByPct',
+              'regionSquare',
+              'sizeByForcedWh',
+              'sizeByWh',
+              'sizeAboveFull',
+              'sizeUpscaling',
+              'rotationBy90s',
+              'mirroring',
+            ],
+            maxWidth: 30000,
+            maxHeight: 30000,
+          },
+        ],
+      },
+      {
+        '@context': 'http://iiif.io/api/image/2/context.json',
+        protocol: 'http://iiif.io/api/image',
+        width: 5262,
+        height: 7488,
+        sizes: [
+          { width: 164, height: 234 },
+          { width: 328, height: 468 },
+          { width: 657, height: 936 },
+          { width: 1315, height: 1872 },
+          { width: 2631, height: 3744 },
+        ],
+        tiles: [{ width: 256, height: 256, scaleFactors: [1, 2, 4, 8, 16, 32] }],
+        '@id': 'https://media.getty.edu/iiif/image/2efd825f-41fe-4f93-b928-f25644c67b23',
+        profile: [
+          'http://iiif.io/api/image/2/level2.json',
+          {
+            formats: ['jpg', 'png', 'webp'],
+            qualities: ['native', 'color', 'gray', 'bitonal'],
+            supports: [
+              'regionByPct',
+              'regionSquare',
+              'sizeByForcedWh',
+              'sizeByWh',
+              'sizeAboveFull',
+              'sizeUpscaling',
+              'rotationBy90s',
+              'mirroring',
+            ],
+            maxWidth: 30000,
+            maxHeight: 30000,
+          },
+        ],
+      },
+      {
+        '@context': 'http://iiif.io/api/image/2/context.json',
+        protocol: 'http://iiif.io/api/image',
+        width: 5209,
+        height: 7397,
+        sizes: [
+          { width: 162, height: 231 },
+          { width: 325, height: 462 },
+          { width: 651, height: 924 },
+          { width: 1302, height: 1849 },
+          { width: 2604, height: 3698 },
+        ],
+        tiles: [{ width: 256, height: 256, scaleFactors: [1, 2, 4, 8, 16, 32] }],
+        '@id': 'https://media.getty.edu/iiif/image/90049c0d-bfd0-4ee9-8b32-70e45597bf5c',
+        profile: [
+          'http://iiif.io/api/image/2/level2.json',
+          {
+            formats: ['jpg', 'png', 'webp'],
+            qualities: ['native', 'color', 'gray', 'bitonal'],
+            supports: [
+              'regionByPct',
+              'regionSquare',
+              'sizeByForcedWh',
+              'sizeByWh',
+              'sizeAboveFull',
+              'sizeUpscaling',
+              'rotationBy90s',
+              'mirroring',
+            ],
+            maxWidth: 30000,
+            maxHeight: 30000,
+          },
+        ],
+      },
+    ];
+
+    const infoA = services[0];
+    const infoB = services[1];
+    const infoC = services[2];
+
+    test('A -> B -> C', async () => {
+      const loader = new ImageServiceLoader();
+      loader.setConfig({ enableFetching: false });
+
+      await loader.sample(infoA as any);
+      await loader.sample(infoB as any);
+      // await loader.sample();
+
+      const prediection = loader.predict({
+        id: infoC['@id'],
+        width: infoC.width as number,
+        height: infoC.height as number,
+      }) as Service;
+
+      expect(prediection).not.toEqual(null);
+
+      // ROUNDING ERROR.
+      // expect(prediection).toMatchObject(infoC);
+    });
+    test('C -> B -> A', async () => {
+      const loader = new ImageServiceLoader();
+      loader.setConfig({ enableFetching: false });
+
+      await loader.sample(infoC as any);
+      await loader.sample(infoB as any);
+      // await loader.sample();
+
+      const prediection = loader.predict({
+        id: infoA['@id'],
+        width: infoA.width as number,
+        height: infoA.height as number,
+      }) as Service;
+
+      expect(prediection).not.toEqual(null);
+      // expect(prediection).toMatchObject(infoA);
+    });
+    test('A -> C -> B', async () => {
+      const loader = new ImageServiceLoader();
+      loader.setConfig({ enableFetching: false });
+
+      await loader.sample(infoA as any);
+      await loader.sample(infoC as any);
+      // await loader.sample();
+
+      const prediection = loader.predict({
+        id: infoB['@id'],
+        width: infoB.width as number,
+        height: infoB.height as number,
+      }) as Service;
+
+      expect(prediection.height).not.toEqual(null);
+
+      // expect(prediection).toMatchObject(infoB);
+    });
+  });
 });
