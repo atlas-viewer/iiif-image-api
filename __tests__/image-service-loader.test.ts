@@ -98,7 +98,7 @@ describe('image service loader', () => {
     };
 
     test('it can analyse an image service', () => {
-      const loader = new ImageServiceLoader();
+      const loader = new ImageServiceLoader({ approximateServices: true });
       loader.setConfig({ enableFetching: false });
 
       loader.sample(image1);
@@ -112,7 +112,7 @@ describe('image service loader', () => {
     });
 
     test('it can verify and predict NLW image services', async () => {
-      const loader = new ImageServiceLoader();
+      const loader = new ImageServiceLoader({ approximateServices: true });
       loader.setConfig({ enableFetching: false });
 
       await loader.sample(image1);
@@ -140,7 +140,7 @@ describe('image service loader', () => {
     });
 
     test('it wont predict if there is not enough verifications', async () => {
-      const loader = new ImageServiceLoader();
+      const loader = new ImageServiceLoader({ approximateServices: true });
       loader.setConfig({ enableFetching: false });
 
       await loader.sample(image1);
@@ -155,7 +155,7 @@ describe('image service loader', () => {
     });
 
     test('after loading an image, it will not be predicted again', async () => {
-      const loader = new ImageServiceLoader();
+      const loader = new ImageServiceLoader({ approximateServices: true });
       loader.setConfig({ enableFetching: false });
 
       await loader.sample(image1);
@@ -314,7 +314,7 @@ describe('image service loader', () => {
     };
 
     test('it can predict image sizes', async () => {
-      const loader = new ImageServiceLoader();
+      const loader = new ImageServiceLoader({ approximateServices: true });
       loader.setConfig({ enableFetching: false });
 
       await loader.sample(image1);
@@ -445,7 +445,7 @@ describe('image service loader', () => {
     };
 
     test('A -> B -> C', async () => {
-      const loader = new ImageServiceLoader();
+      const loader = new ImageServiceLoader({ approximateServices: true });
       loader.setConfig({ enableFetching: false });
 
       await loader.sample(infoA as any);
@@ -461,7 +461,7 @@ describe('image service loader', () => {
       expect(prediection).toEqual(null);
     });
     test('C -> B -> A', async () => {
-      const loader = new ImageServiceLoader();
+      const loader = new ImageServiceLoader({ approximateServices: true });
       loader.setConfig({ enableFetching: false });
 
       await loader.sample(infoC as any);
@@ -477,7 +477,7 @@ describe('image service loader', () => {
       expect(prediection).toEqual(null);
     });
     test('A -> C -> B', async () => {
-      const loader = new ImageServiceLoader();
+      const loader = new ImageServiceLoader({ approximateServices: true });
       loader.setConfig({ enableFetching: false });
 
       await loader.sample(infoA as any);

@@ -68,9 +68,13 @@ export type ImageServiceLoaderConfig = {
 };
 
 export class ImageServiceLoader {
+  constructor(options: Partial<ImageServiceLoaderConfig> = {}) {
+    this.config = Object.assign(this.config, options);
+  }
+
   config: ImageServiceLoaderConfig = {
     verificationsRequired: 1,
-    approximateServices: true,
+    approximateServices: false,
     enableFetching: true,
     disableThrottling: false,
   };
@@ -171,6 +175,15 @@ export class ImageServiceLoader {
     const source = resource?.source;
     const serverId = getImageServerFromId(getId(resource));
     const imageServer = this.knownImageServers[serverId];
+    const serviceUrl = canonicalServiceUrl(getId(resource));
+
+    if (this.imageServices[serviceUrl]) {
+      return this.imageServices[serviceUrl];
+    }
+
+    if (!this.config.approximateServices) {
+      return null;
+    }
 
     // No known image server.
     if (
@@ -183,8 +196,6 @@ export class ImageServiceLoader {
     ) {
       return null;
     }
-
-    const serviceUrl = canonicalServiceUrl(getId(resource));
 
     if (!this.imageServices[serviceUrl]) {
       this.imageServices[serviceUrl] = {
@@ -265,9 +276,11 @@ export class ImageServiceLoader {
 
     if (isValid) {
       const serverId = getImageServerFromId(getId(resource));
-      this.knownImageServers[serverId].verifications += 1;
-      if (this.knownImageServers[serverId].verifications >= this.config.verificationsRequired) {
-        this.knownImageServers[serverId].verified = true;
+      if (this.knownImageServers[serverId]) {
+        this.knownImageServers[serverId].verifications += 1;
+        if (this.knownImageServers[serverId].verifications >= this.config.verificationsRequired) {
+          this.knownImageServers[serverId].verified = true;
+        }
       }
     }
 
@@ -394,6 +407,10 @@ export class ImageServiceLoader {
 
     if (this.imageServices[serviceId]) {
       return this.imageServices[serviceId];
+    }
+
+    if (!this.config.approximateServices) {
+      return null;
     }
 
     // Other-wise we do the magic.
