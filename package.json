@@ -1,6 +1,6 @@
 {
   "name": "@atlas-viewer/iiif-image-api",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "typings": "dist/index.d.ts",
   "author": "Stephen Fraser <stephen.fraser@digirati.com>",
   "license": "MIT",
