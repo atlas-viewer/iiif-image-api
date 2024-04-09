@@ -28,5 +28,5 @@ jobs:
       - run: pnpm run test
       - run: pnpm run lint
       - run: pnpm run typecheck
-      - run: node pkg-tests/node-load.js
+      - run: node pkg-tests/node-load.cjs
       - run: node pkg-tests/node-load.mjs
