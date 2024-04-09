@@ -28,7 +28,6 @@ import { getImageCandidates } from './utility/get-image-candidates';
 import { pickBestFromCandidates } from './utility/pick-from-best-candidates';
 import { getId } from './utility/get-id';
 import { getImageServerFromId } from './utility/get-image-server-from-id';
-import { level0 } from './profiles';
 import { isLevel0 } from './utility/is-level-0';
 
 export type ImageServer = {
@@ -157,8 +156,8 @@ export class ImageServiceLoader {
   preLoad(server: ImageServer, forceVerify = true) {
     this.knownImageServers[server.root] = server;
     if (forceVerify) {
-      this.knownImageServers[server.root].malformed = false;
-      this.knownImageServers[server.root].verifications = this.config.verificationsRequired;
+      this.knownImageServers[server.root]!.malformed = false;
+      this.knownImageServers[server.root]!.verifications = this.config.verificationsRequired;
     }
   }
 
@@ -178,7 +177,7 @@ export class ImageServiceLoader {
     const serviceUrl = canonicalServiceUrl(getId(resource));
 
     if (this.imageServices[serviceUrl]) {
-      return this.imageServices[serviceUrl];
+      return this.imageServices[serviceUrl] || null;
     }
 
     if (!this.config.approximateServices) {
@@ -218,7 +217,7 @@ export class ImageServiceLoader {
       } as any;
     }
 
-    return this.imageServices[serviceUrl];
+    return this.imageServices[serviceUrl] || null;
   }
 
   async getThumbnailFromResource(
@@ -276,10 +275,11 @@ export class ImageServiceLoader {
 
     if (isValid) {
       const serverId = getImageServerFromId(getId(resource));
-      if (this.knownImageServers[serverId]) {
-        this.knownImageServers[serverId].verifications += 1;
-        if (this.knownImageServers[serverId].verifications >= this.config.verificationsRequired) {
-          this.knownImageServers[serverId].verified = true;
+      const server = this.knownImageServers[serverId];
+      if (server) {
+        server.verifications += 1;
+        if (server.verifications >= this.config.verificationsRequired) {
+          server.verified = true;
         }
       }
     }
@@ -294,7 +294,7 @@ export class ImageServiceLoader {
       return true;
     }
     const server = this.knownImageServers[getImageServerFromId(serviceId)];
-    return server && !server.malformed && server.verifications >= this.config.verificationsRequired;
+    return !!(server && !server.malformed && server.verifications >= this.config.verificationsRequired);
   }
 
   /**
@@ -307,7 +307,7 @@ export class ImageServiceLoader {
    * @param resource
    */
   async markAsMalformed(resource: ImageServiceRequest): Promise<Service> {
-    this.knownImageServers[getImageServerFromId(getId(resource))].malformed = true;
+    this.knownImageServers[getImageServerFromId(getId(resource))]!.malformed = true;
     return this.loadService(resource, true);
   }
 
@@ -319,9 +319,10 @@ export class ImageServiceLoader {
    */
   async fetchService(serviceId: string, forceFresh = false): Promise<Service & { real: boolean }> {
     const serviceUrl = canonicalServiceUrl(serviceId);
+    const service = this.imageServices[serviceUrl];
 
-    if (this.imageServices[serviceUrl] && (!forceFresh || this.imageServices[serviceUrl].real)) {
-      return this.imageServices[serviceUrl];
+    if (service && (!forceFresh || service!.real)) {
+      return service;
     }
 
     if (!this.config.enableFetching) {
@@ -343,7 +344,7 @@ export class ImageServiceLoader {
 
     this.imageServices[serviceUrl] = Object.assign(json, { real: true });
 
-    return this.imageServices[serviceUrl];
+    return this.imageServices[serviceUrl]!;
   }
 
   async fetch(input: RequestInfo, init?: RequestInit): Promise<Response> {
@@ -406,7 +407,7 @@ export class ImageServiceLoader {
     const serviceId = canonicalServiceUrl(getId(resource));
 
     if (this.imageServices[serviceId]) {
-      return this.imageServices[serviceId];
+      return this.imageServices[serviceId]!;
     }
 
     if (!this.config.approximateServices) {

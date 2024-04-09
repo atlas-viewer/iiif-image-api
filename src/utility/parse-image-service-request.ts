@@ -7,7 +7,7 @@ import { parseImageServiceUrl } from './parse-image-service-url';
 export function parseImageServiceRequest(input: string, _prefix = ''): ImageServiceImageRequest {
   const { path, scheme, server, prefix } = parseImageServiceUrl(input, _prefix);
 
-  const parts = path.split('/').reverse();
+  const parts = (path || '').split('/').reverse();
   const [fileName, rotation, size, region, ...others] = parts;
   const identifier = others.reverse().filter(Boolean).join('/');
 
@@ -28,7 +28,17 @@ export function parseImageServiceRequest(input: string, _prefix = ''): ImageServ
     };
   }
 
-  const filenameParts = fileName.split('.');
+  const filenameParts = (fileName || '').split('.');
+
+  if (
+    typeof filenameParts[1] === 'undefined' ||
+    typeof filenameParts[0] === 'undefined' ||
+    typeof region === 'undefined' ||
+    typeof size === 'undefined' ||
+    typeof rotation === 'undefined'
+  ) {
+    throw new Error('Invalid image request');
+  }
 
   return {
     type: 'image',

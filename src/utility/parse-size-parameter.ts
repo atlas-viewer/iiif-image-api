@@ -29,12 +29,12 @@ export function parseSizeParameter(pathPart: string): SizeParameter {
   }
 
   const wh = pathPart.split(',').map((t) => t.trim());
-  if (wh.length) {
+  if (wh.length && typeof wh[0] !== 'undefined') {
     if (wh[0] !== '') {
       size.width = parseInt(wh[0], 10);
     }
 
-    if (wh[1] !== '') {
+    if (typeof wh[1] !== 'undefined' && wh[1] !== '') {
       size.height = parseInt(wh[1], 10);
       size.version = 2;
     } else {

@@ -1,3 +1,4 @@
+import { describe, expect, test } from 'vitest';
 import { parseImageServiceRequest } from '../src/utility/parse-image-service-request';
 import { imageServiceRequestToString } from '../src/utility/image-service-request-to-string';
 import { createImageServiceRequest } from '../src/utility/create-image-service-request';
@@ -17,21 +18,21 @@ describe('IIIF Image API Parameters', () => {
         'apis/iiif/image/v2'
       );
       expect(parsed).toMatchInlineSnapshot(`
-        Object {
+        {
           "format": "jpg",
           "identifier": "17261",
           "originalPath": "/17261/full/max/0/default.jpg",
           "prefix": "apis/iiif/image/v2",
           "quality": "default",
-          "region": Object {
+          "region": {
             "full": true,
           },
-          "rotation": Object {
+          "rotation": {
             "angle": 0,
           },
           "scheme": "https",
           "server": "munch.emuseum.com",
-          "size": Object {
+          "size": {
             "confined": false,
             "max": true,
             "serialiseAsFull": false,
@@ -52,25 +53,25 @@ describe('IIIF Image API Parameters', () => {
         'apis/iiif/image/v2'
       );
       expect(parsed).toMatchInlineSnapshot(`
-        Object {
+        {
           "format": "jpg",
           "identifier": "17261",
           "originalPath": "/17261/90,0,350,220/max/0/default.jpg",
           "prefix": "apis/iiif/image/v2",
           "quality": "default",
-          "region": Object {
+          "region": {
             "h": 220,
             "percent": false,
             "w": 350,
             "x": 90,
             "y": 0,
           },
-          "rotation": Object {
+          "rotation": {
             "angle": 0,
           },
           "scheme": "https",
           "server": "munch.emuseum.com",
-          "size": Object {
+          "size": {
             "confined": false,
             "max": true,
             "serialiseAsFull": false,
@@ -90,25 +91,25 @@ describe('IIIF Image API Parameters', () => {
         'apis/iiif/image/v2'
       );
       expect(parsed).toMatchInlineSnapshot(`
-        Object {
+        {
           "format": "jpg",
           "identifier": "17261",
           "originalPath": "/17261/90,0,350,220/max/90/default.jpg",
           "prefix": "apis/iiif/image/v2",
           "quality": "default",
-          "region": Object {
+          "region": {
             "h": 220,
             "percent": false,
             "w": 350,
             "x": 90,
             "y": 0,
           },
-          "rotation": Object {
+          "rotation": {
             "angle": 90,
           },
           "scheme": "https",
           "server": "munch.emuseum.com",
-          "size": Object {
+          "size": {
             "confined": false,
             "max": true,
             "serialiseAsFull": false,
@@ -128,7 +129,7 @@ describe('IIIF Image API Parameters', () => {
         'apis/iiif/image/v2'
       );
       expect(parsed).toMatchInlineSnapshot(`
-        Object {
+        {
           "identifier": "17261",
           "prefix": "apis/iiif/image/v2",
           "scheme": "https",
@@ -150,21 +151,21 @@ describe('IIIF Image API Parameters', () => {
         'https://framemark.vam.ac.uk/collections/2006AN7529/full/full/0/default.jpg'
       );
       expect(parsed).toMatchInlineSnapshot(`
-        Object {
+        {
           "format": "jpg",
           "identifier": "collections/2006AN7529",
           "originalPath": "collections/2006AN7529/full/full/0/default.jpg",
           "prefix": "",
           "quality": "default",
-          "region": Object {
+          "region": {
             "full": true,
           },
-          "rotation": Object {
+          "rotation": {
             "angle": 0,
           },
           "scheme": "https",
           "server": "framemark.vam.ac.uk",
-          "size": Object {
+          "size": {
             "confined": false,
             "max": true,
             "serialiseAsFull": true,
@@ -182,21 +183,21 @@ describe('IIIF Image API Parameters', () => {
         'https://framemark.vam.ac.uk/collections/2006AN7529/full/600,400/0/default.jpg'
       );
       expect(parsed).toMatchInlineSnapshot(`
-        Object {
+        {
           "format": "jpg",
           "identifier": "collections/2006AN7529",
           "originalPath": "collections/2006AN7529/full/600,400/0/default.jpg",
           "prefix": "",
           "quality": "default",
-          "region": Object {
+          "region": {
             "full": true,
           },
-          "rotation": Object {
+          "rotation": {
             "angle": 0,
           },
           "scheme": "https",
           "server": "framemark.vam.ac.uk",
-          "size": Object {
+          "size": {
             "confined": false,
             "height": 400,
             "max": false,
@@ -216,21 +217,21 @@ describe('IIIF Image API Parameters', () => {
         'https://framemark.vam.ac.uk/collections/2016JL5779/full/!100,100/0/default.jpg'
       );
       expect(parsed).toMatchInlineSnapshot(`
-        Object {
+        {
           "format": "jpg",
           "identifier": "collections/2016JL5779",
           "originalPath": "collections/2016JL5779/full/!100,100/0/default.jpg",
           "prefix": "",
           "quality": "default",
-          "region": Object {
+          "region": {
             "full": true,
           },
-          "rotation": Object {
+          "rotation": {
             "angle": 0,
           },
           "scheme": "https",
           "server": "framemark.vam.ac.uk",
-          "size": Object {
+          "size": {
             "confined": true,
             "height": 100,
             "max": false,
@@ -250,21 +251,21 @@ describe('IIIF Image API Parameters', () => {
         'https://framemark.vam.ac.uk/collections/2006AN7529/full/full/0/grey.jpg'
       );
       expect(parsed).toMatchInlineSnapshot(`
-        Object {
+        {
           "format": "jpg",
           "identifier": "collections/2006AN7529",
           "originalPath": "collections/2006AN7529/full/full/0/grey.jpg",
           "prefix": "",
           "quality": "grey",
-          "region": Object {
+          "region": {
             "full": true,
           },
-          "rotation": Object {
+          "rotation": {
             "angle": 0,
           },
           "scheme": "https",
           "server": "framemark.vam.ac.uk",
-          "size": Object {
+          "size": {
             "confined": false,
             "max": true,
             "serialiseAsFull": true,
@@ -282,21 +283,21 @@ describe('IIIF Image API Parameters', () => {
         'https://framemark.vam.ac.uk/collections/2006AN7529/full/full/180/default.jpg'
       );
       expect(parsed).toMatchInlineSnapshot(`
-        Object {
+        {
           "format": "jpg",
           "identifier": "collections/2006AN7529",
           "originalPath": "collections/2006AN7529/full/full/180/default.jpg",
           "prefix": "",
           "quality": "default",
-          "region": Object {
+          "region": {
             "full": true,
           },
-          "rotation": Object {
+          "rotation": {
             "angle": 180,
           },
           "scheme": "https",
           "server": "framemark.vam.ac.uk",
-          "size": Object {
+          "size": {
             "confined": false,
             "max": true,
             "serialiseAsFull": true,
@@ -317,21 +318,21 @@ describe('IIIF Image API Parameters', () => {
       profile: 'level0',
     });
     expect(req).toMatchInlineSnapshot(`
-      Object {
+      {
         "format": "jpg",
         "identifier": "collections/2006AN7529",
         "originalPath": "",
         "prefix": "",
         "quality": "default",
-        "region": Object {
+        "region": {
           "full": true,
         },
-        "rotation": Object {
+        "rotation": {
           "angle": 0,
         },
         "scheme": "https",
         "server": "framemark.vam.ac.uk",
-        "size": Object {
+        "size": {
           "confined": false,
           "max": true,
           "upscaled": false,

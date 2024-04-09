@@ -22,6 +22,7 @@ export function getSmallestScaleFactorAsSingleImage(service: Service): FixedSize
     const len = tiles.length;
     for (let i = 0; i < len; i++) {
       const tile = tiles[i];
+      if (!tile) continue;
       // @todo possible refinement.
       // const targetSize = tile.width > (tile.height || 0) ? tile.width : tile.height;
       const targetSize = tile.width;
@@ -32,13 +33,14 @@ export function getSmallestScaleFactorAsSingleImage(service: Service): FixedSize
       const sortedScales = tile.scaleFactors.sort();
       for (let j = 0; j < sizeLen; j++) {
         const size = sortedScales[j];
+        if (!size) continue;
         if (service.width / size <= targetSize && service.height / size <= targetSize) {
           return {
             id: getId(service),
             type: 'fixed-service',
             width: (service.width / size) | 0,
             height: (service.height / size) | 0,
-            level: getLevelFromService(service),
+            level: getLevelFromService(service)!,
             version: isImage3(service) ? 3 : 2,
           };
         }

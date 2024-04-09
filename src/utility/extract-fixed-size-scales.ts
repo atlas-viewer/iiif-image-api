@@ -15,8 +15,10 @@ export function extractFixedSizeScales(width: number, height: number, sizes: Ima
   const scales = [];
   for (let i = 0; i < len; i++) {
     const size = sizes[i];
-    const w = size.width;
-    scales.push(width / w);
+    if (size) {
+      const w = size.width;
+      scales.push(width / w);
+    }
   }
   return scales;
 }

@@ -3,6 +3,7 @@ import { canonicalServiceUrl } from './canonical-service-url';
 import { getId } from './get-id';
 import { createImageServiceRequest } from './create-image-service-request';
 import { imageServiceRequestToString } from './image-service-request-to-string';
+import { ImageProfile } from '@iiif/presentation-3';
 
 export function getImageFromTileSource(
   image: FixedSizeImageService,
@@ -14,7 +15,10 @@ export function getImageFromTileSource(
     '@context':
       image.version === 3 ? 'http://iiif.io/api/image/3/context.json' : 'http://iiif.io/api/image/2/context.json',
     id: canonicalServiceUrl(getId(image)),
-    profile: image.level === null || typeof image.level === 'undefined' ? 'level0' : `level${image.level}}`,
+    profile:
+      image.level === null || typeof image.level === 'undefined'
+        ? ('level0' as ImageProfile)
+        : (`level${image.level}` as ImageProfile),
     type: image.version === 3 ? 'ImageService3' : 'ImageService2',
   });
 

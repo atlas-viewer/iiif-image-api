@@ -9,7 +9,7 @@ export function inferSizeFromUrl(image: string): ImageCandidate {
   const regex = /^.*\/(full)\/(((\d+),(\d+)?)|max)\/(\d+)\/default\.(jpg|png|jpeg)$/;
   const match = image.match(regex);
 
-  if (match) {
+  if (match && match[4] && match[5]) {
     const region = match[1];
     const width = parseInt(match[4], 10);
     const height = parseInt(match[5], 10);
