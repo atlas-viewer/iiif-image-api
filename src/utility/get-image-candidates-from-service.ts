@@ -8,13 +8,15 @@ export function getImageCandidatesFromService(service: Service[]): ImageCandidat
 
   const totalServices = service.length;
   for (let s = 0; s < totalServices; s++) {
+    const single = service[s];
+    if (!single) continue;
     // - x.2 embedded service - fixed sizes
-    const fixedSizes = getFixedSizesFromService(service[s]);
+    const fixedSizes = getFixedSizesFromService(single);
     if (fixedSizes.length) {
       candidates.push(...fixedSizes);
     }
     // - x.3 embedded service - profile 1 / 2 (custom size)
-    const customSizes = getCustomSizeFromService(service[s]);
+    const customSizes = getCustomSizeFromService(single);
     if (customSizes.length) {
       candidates.push(...customSizes);
     }

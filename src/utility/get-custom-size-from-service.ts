@@ -28,7 +28,7 @@ export function getCustomSizeFromService(service: Service): ImageCandidate[] {
   const pLen = profiles.length;
   for (let x = 0; x < pLen; x++) {
     const profile = profiles[x];
-    if (typeof profile !== 'string') {
+    if (profile && typeof profile !== 'string') {
       if (profile.maxHeight || profile.maxWidth) {
         return [
           {
@@ -50,7 +50,7 @@ export function getCustomSizeFromService(service: Service): ImageCandidate[] {
     const len = service.tiles.length;
     for (let y = 0; y < len; y++) {
       const tile = service.tiles[y];
-      if (tile.height || tile.width) {
+      if (tile && (tile.height || tile.width)) {
         imagesSizes.push({
           id: getId(service),
           type: 'variable',

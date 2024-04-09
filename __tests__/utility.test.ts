@@ -1,3 +1,4 @@
+import { describe, expect, test } from 'vitest';
 import { ImageServiceLoader } from '../src/image-service-loader';
 import { ImageCandidate } from '../src/types';
 import {
@@ -95,7 +96,7 @@ describe('image utilities', () => {
     });
 
     test('no id provided, invalid image but valid content resource.. technically', () => {
-      expect(getFixedSizeFromImage({ type: 'Image', value: 'some textual value' })).toEqual(null);
+      expect(getFixedSizeFromImage({ type: 'Image', value: 'some textual value' } as any)).toEqual(null);
     });
 
     test('almost an image, but no dimensions', () => {

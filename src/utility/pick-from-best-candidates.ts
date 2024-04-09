@@ -77,7 +77,7 @@ export function pickBestFromCandidates(
   explain(() => `The input shows we have ${candidates.length} list(s) of candidates to choose from.`);
   const candidateGroups = candidates.length;
   for (let x = 0; x < candidateGroups; x++) {
-    const group = candidates[x]();
+    const group = candidates[x]!();
 
     explain(() => `Candidate group ${x}: ${JSON.stringify(group, null, 2)}`, 1);
 
@@ -87,7 +87,7 @@ export function pickBestFromCandidates(
       1
     );
     for (let y = 0; y < candidatesLength; y++) {
-      const candidate = group[y];
+      const candidate = group[y]!;
       explain(() => `-> Checking candidate ${y}`, 1);
       if (candidate.type === 'unknown' && request.atAnyCost) {
         explain(() => `We've found an unknown image type, adding this to the "last resort" list`, 2);
@@ -154,7 +154,7 @@ export function pickBestFromCandidates(
         : `We found no images, but "atAnyCost" is set, so returning that`
     );
     return {
-      best: currentChoice || lastResorts[0],
+      best: currentChoice || lastResorts[0] || null,
       fallback: lastResorts.slice(1),
       log,
     };
@@ -163,7 +163,7 @@ export function pickBestFromCandidates(
   if (request.returnAllOptions) {
     explain(() => `Returning all options that we have found`);
     return {
-      best: request.atAnyCost ? currentChoice || fallback[0] || lastResorts[0] : currentChoice || fallback[0],
+      best: (request.atAnyCost ? currentChoice || fallback[0] || lastResorts[0] : currentChoice || fallback[0]) || null,
       fallback: [...fallback, ...lastResorts],
       log,
     };

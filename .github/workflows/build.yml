@@ -1,0 +1,25 @@
+name: Build
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: ['18', '20']
+
+    name: Node ${{ matrix.node }} build
+    steps:
+      - uses: actions/checkout@v1
+      - name: Setup node
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node }}
+      - run: pnpm install --frozen-lockfile --non-interactive
+      - run: pnpm run build
+      - run: pnpm run test
+      - run: pnpm run lint
+      - run: pnpm run typecheck
+      - run: node pkg-tests/node-load.js
+      - run: node pkg-tests/node-load.mjs

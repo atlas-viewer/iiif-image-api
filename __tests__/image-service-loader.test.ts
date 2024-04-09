@@ -1,3 +1,4 @@
+import { describe, expect, test } from 'vitest';
 import { ImageServiceLoader } from '../src/image-service-loader';
 import { Service } from '../src/types';
 import { ImageService } from '@iiif/presentation-3';
@@ -105,8 +106,8 @@ describe('image service loader', () => {
 
       expect(Object.keys(loader.knownImageServers)).toEqual(['damsssl.llgc.org.uk']);
 
-      expect(loader.knownImageServers['damsssl.llgc.org.uk'].verified).toEqual(false);
-      expect(loader.knownImageServers['damsssl.llgc.org.uk'].sampledId).toEqual(
+      expect(loader.knownImageServers['damsssl.llgc.org.uk']!.verified).toEqual(false);
+      expect(loader.knownImageServers['damsssl.llgc.org.uk']!.sampledId).toEqual(
         'https://damsssl.llgc.org.uk/iiif/2.0/image/4694557'
       );
     });
@@ -136,7 +137,7 @@ describe('image service loader', () => {
       ).not.toEqual(null);
 
       expect(Object.keys(loader.knownImageServers)).toEqual(['damsssl.llgc.org.uk']);
-      expect(loader.knownImageServers['damsssl.llgc.org.uk'].verified).toEqual(true);
+      expect(loader.knownImageServers['damsssl.llgc.org.uk']!.verified).toEqual(true);
     });
 
     test('it wont predict if there is not enough verifications', async () => {
@@ -169,7 +170,7 @@ describe('image service loader', () => {
         })
       ).not.toEqual(null);
 
-      expect(loader.knownImageServers['damsssl.llgc.org.uk'].verifications).toEqual(1);
+      expect(loader.knownImageServers['damsssl.llgc.org.uk']!.verifications).toEqual(1);
     });
   });
 
@@ -332,7 +333,7 @@ describe('image service loader', () => {
       expect(image3Prediction.sizes).toEqual(image3.sizes);
 
       expect(Object.keys(loader.knownImageServers)).toEqual(['iiif.bodleian.ox.ac.uk']);
-      expect(loader.knownImageServers['iiif.bodleian.ox.ac.uk'].verified).toEqual(true);
+      expect(loader.knownImageServers['iiif.bodleian.ox.ac.uk']!.verified).toEqual(true);
     });
   });
 
@@ -452,13 +453,13 @@ describe('image service loader', () => {
       await loader.sample(infoB as any);
       // await loader.sample();
 
-      const prediection = loader.predict({
+      const prediction = loader.predict({
         id: infoC['@id'],
         width: infoC.width as number,
         height: infoC.height as number,
       }) as Service;
 
-      expect(prediection).toEqual(null);
+      expect(prediction).toEqual(null);
     });
     test('C -> B -> A', async () => {
       const loader = new ImageServiceLoader({ approximateServices: true });
@@ -468,13 +469,13 @@ describe('image service loader', () => {
       await loader.sample(infoB as any);
       // await loader.sample();
 
-      const prediection = loader.predict({
+      const prediction = loader.predict({
         id: infoA['@id'],
         width: infoA.width as number,
         height: infoA.height as number,
       }) as Service;
 
-      expect(prediection).toEqual(null);
+      expect(prediction).toEqual(null);
     });
     test('A -> C -> B', async () => {
       const loader = new ImageServiceLoader({ approximateServices: true });
@@ -484,13 +485,13 @@ describe('image service loader', () => {
       await loader.sample(infoC as any);
       // await loader.sample();
 
-      const prediection = loader.predict({
+      const prediction = loader.predict({
         id: infoB['@id'],
         width: infoB.width as number,
         height: infoB.height as number,
       }) as Service;
 
-      expect(prediection).toEqual(null);
+      expect(prediction).toEqual(null);
     });
   });
 });
