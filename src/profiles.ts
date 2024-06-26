@@ -37,6 +37,10 @@ export const IIIF_2_IMAGE_LEVEL_0_NO_JSON = 'http://iiif.io/api/image/2/level0';
 export const IIIF_2_IMAGE_LEVEL_1_NO_JSON = 'http://iiif.io/api/image/2/level1';
 export const IIIF_2_IMAGE_LEVEL_2_NO_JSON = 'http://iiif.io/api/image/2/level2';
 
+export const IIIF_1_IMAGE_LEVEL_0_COMPLIANCE = 'https://iiif.io/api/image/1.1/compliance/#level0';
+export const IIIF_1_IMAGE_LEVEL_1_COMPLIANCE = 'https://iiif.io/api/image/1.1/compliance/#level1';
+export const IIIF_1_IMAGE_LEVEL_2_COMPLIANCE = 'https://iiif.io/api/image/1.1/compliance/#level2';
+
 export const level2Support = [
   IIIF_2_IMAGE_LEVEL_2_NO_JSON,
   STANFORD_IIIF_IMAGE_COMPLIANCE_2,
@@ -48,6 +52,7 @@ export const level2Support = [
   IIIF_2_IMAGE_LEVEL_2,
   IIIF_2_IMAGE_LEVEL_2_PROFILE,
   IIIF_3_IMAGE_LEVEL_2,
+  IIIF_1_IMAGE_LEVEL_2_COMPLIANCE,
 ];
 
 export const level1Support = [
@@ -62,6 +67,7 @@ export const level1Support = [
   IIIF_2_IMAGE_LEVEL_1,
   IIIF_2_IMAGE_LEVEL_1_PROFILE,
   IIIF_3_IMAGE_LEVEL_1,
+  IIIF_1_IMAGE_LEVEL_1_COMPLIANCE,
 ];
 
 export const imageServiceProfiles = [
@@ -95,6 +101,9 @@ export const imageServiceProfiles = [
   IIIF_3_IMAGE_LEVEL_0,
   IIIF_3_IMAGE_LEVEL_1,
   IIIF_3_IMAGE_LEVEL_2,
+  IIIF_1_IMAGE_LEVEL_0_COMPLIANCE,
+  IIIF_1_IMAGE_LEVEL_1_COMPLIANCE,
+  IIIF_1_IMAGE_LEVEL_2_COMPLIANCE,
 ];
 
 export const level0Support = imageServiceProfiles;
