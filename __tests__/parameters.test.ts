@@ -2,9 +2,55 @@ import { describe, expect, test } from 'vitest';
 import { parseImageServiceRequest } from '../src/utility/parse-image-service-request';
 import { imageServiceRequestToString } from '../src/utility/image-service-request-to-string';
 import { createImageServiceRequest } from '../src/utility/create-image-service-request';
+import { ImageServiceImageRequest } from '../src';
+import { ImageService } from '@iiif/presentation-3';
 
 describe('IIIF Image API Parameters', () => {
   /// {scheme}://{server}{/prefix}/{identifier}/{region}/{size}/{rotation}/{quality}.{format}
+
+  describe('SI JPCA image service examples', () => {
+    test('image service without explicit context', () => {
+      const parsed = {
+        scheme: 'https',
+        server: 'iiif.jpcarchive.org',
+        prefix: '',
+        identifier: 'iiif/v2.0/media/JPC-b0a2d4ca692a34ef465ff5b5c736391d_0009_001',
+        originalPath: '',
+        type: 'image',
+        region: {
+          full: true,
+        },
+        size: {
+          max: false,
+          upscaled: false,
+          confined: false,
+          width: 550,
+          height: 600,
+        },
+        rotation: {
+          angle: 0,
+          mirror: false,
+        },
+        format: 'jpg',
+        quality: 'default',
+      } as ImageServiceImageRequest;
+
+      const service = {
+        sizes: [],
+        width: 550,
+        height: 600,
+        maxWidth: 550,
+        maxHeight: 600,
+        id: 'https://iiif.jpcarchive.org/iiif/v2.0/media/JPC-b0a2d4ca692a34ef465ff5b5c736391d_0009_001',
+        type: 'ImageService2',
+        profile: 'level2',
+      } as ImageService;
+
+      expect(imageServiceRequestToString(parsed, service)).toEqual(
+        'https://iiif.jpcarchive.org/iiif/v2.0/media/JPC-b0a2d4ca692a34ef465ff5b5c736391d_0009_001/full/full/0/default.jpg'
+      );
+    });
+  });
 
   describe('munch.emuseum.com examples', () => {
     // https://munch.emuseum.com/apis/iiif/image/v2/17261/full/max/0/default.jpg
