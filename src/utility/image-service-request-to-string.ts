@@ -26,7 +26,9 @@ export function imageServiceRequestToString(req: ImageServiceImageRequest, servi
         ? service['@context']
         : [service['@context']]
       : [];
-    const is2 = ctx.indexOf('http://iiif.io/api/image/2/context.json') !== -1;
+    const profile = service['profile'];
+    // fallback for bug where some level 2 image services lack a context
+    const is2 = ctx.indexOf('http://iiif.io/api/image/2/context.json') !== -1 || profile === 'level2';
     const is3 = ctx.indexOf('http://iiif.io/api/image/3/context.json') !== -1;
 
     // max size, for canonical.
